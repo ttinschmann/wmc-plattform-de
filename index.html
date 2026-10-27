@@ -1,0 +1,1626 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>WMC Intelligence</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+html{padding:0}
+img{max-width:100%}
+[hidden]{display:none !important}
+</style>
+<style>
+/* Layout: dark WMC sidebar + fluid content; one screen visible at a time via hash */
+:root{--bg:#F7F4F2;--fg:#1C2024;--side:#3C261D;--accent:#D55C05;--line:#E6DFDB;--muted:#5E5652;color-scheme:light}
+html,body{height:100%}
+body{margin:0;font-family:Inter,system-ui,sans-serif;background:var(--bg);color:var(--fg);font-size:14px;line-height:1.45}
+
+#start{margin:0;font-family:Inter,system-ui,sans-serif;color:#1C2024;background:#F7F4F2;font-size:14px;line-height:1.45}
+#start a{color:#D55C05}a:hover{color:#B04C04}
+#start .nav a{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;color:#EAE4E1;text-decoration:none;font-weight:500;min-height:44px;box-sizing:border-box}
+#start .nav a:hover{background:rgba(255,255,255,.08);color:#fff}
+#start .nav a.on{background:rgba(255,255,255,.14);color:#fff}
+#start .nav svg{width:18px;height:18px;flex:none}
+#start .card{background:#fff;border:1px solid #E6DFDB;border-radius:12px}
+#start .btn{display:inline-flex;align-items:center;gap:8px;padding:10px 16px;border-radius:8px;border:1px solid #C1B2AA;background:#fff;color:#1C2024;font:inherit;font-weight:600;cursor:pointer;min-height:44px;text-decoration:none}
+#start .btn:hover{background:#F7F4F2}
+#start .btn.p{background:#D55C05;border-color:#D55C05;color:#fff}
+#start .btn.p:hover{background:#B04C04;color:#fff}
+#start .chip{display:inline-flex;align-items:center;padding:3px 9px;border-radius:999px;font-size:12px;font-weight:600;background:#EAE4E1;color:#3C261D;white-space:nowrap;line-height:1.3}
+#start .chip.o{background:#FBE8DA;color:#9A4204}
+#start .chip.g{background:#E1F0E6;color:#1E6B3A}
+#start .chip.b{background:#E3EAF6;color:#24467C}
+#start .muted{color:#5E5652}
+#start h1,#start h2,#start h3{margin:0;font-weight:700}
+#start .row{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 18px;border-top:1px solid #EFEAE7;text-decoration:none;color:#1C2024}
+#start .row:first-of-type{border-top:0}
+#start .row:hover{background:#FBF9F8}
+#start .wk{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px}
+#start .wd{display:flex;flex-direction:column;gap:6px;min-width:0;padding:10px 10px 12px;border-radius:10px;border:1px solid #EFEAE7;background:#FBF9F8}
+#start .wd.t{background:#fff;border-color:#D55C05;box-shadow:0 0 0 2px #FBE8DA}
+#start .wh{display:flex;align-items:baseline;gap:6px;font-size:12px;color:#5E5652;font-weight:600}
+#start .wh b{font-size:14px;color:#1C2024}
+#start .wd.t .wh b{color:#D55C05}
+#start .wi{font-size:12px;line-height:1.35;padding:6px 8px;border-radius:7px;background:#fff;border:1px solid #EFEAE7;display:flex;flex-direction:column;gap:2px;min-width:0}
+#start .wd.t .wi{background:#FBF9F8}
+#start .wi .k{font-size:10px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;color:#5E5652}
+#start .wi.termin .k{color:#9A4204}.wi.agent .k{color:#24467C}.wi.frist .k{color:#8A2525}.wi.erledigt .k{color:#1E6B3A}
+#start .wi .p{font-size:11px;color:#5E5652;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#start .todo{display:flex;align-items:flex-start;gap:10px;padding:10px 18px;border-top:1px solid #EFEAE7;cursor:pointer}
+#start .todo:hover{background:#FBF9F8}
+#start .todo input{width:18px;height:18px;margin:2px 0 0;accent-color:#D55C05;flex:none}
+#start .todo .d{font-size:12px;color:#5E5652}
+#start .todo .k{display:block;font-size:10px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;margin-bottom:1px}
+#start .todo.done span.t{text-decoration:line-through;color:#5E5652}
+#start .chip.r{background:#F8E1E1;color:#8A2525}
+#start .chip.danger{background:#E10600;color:#fff;box-shadow:0 0 0 3px #FFB3AD}
+#start .god{display:flex;align-items:center;justify-content:center;min-height:120px;font-size:28px;font-weight:800;letter-spacing:-0.5px;color:#1C2024}
+/* compact: one screen at 1440x900 */
+#start .row{padding:8px 16px;gap:12px}
+#start .row .muted{font-size:11px}
+#start .rad{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 14px}
+#start .rr{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:center;padding:7px 10px 7px 12px;border-radius:9px;border:1px solid #E6DFDB;background:#fff;border-left-width:4px;min-width:0}
+#start .rr.block{border-left-color:#8A2525}.rr.ext{border-left-color:#D55C05}.rr.dl{border-left-color:#9A4204}
+#start .rh{display:flex;flex-direction:column;gap:3px;align-items:flex-start;font-size:10px;width:92px}
+#start .rh .chip{font-size:10px;padding:1px 7px}
+#start .rb{display:flex;flex-direction:column;gap:1px;min-width:0;font-size:12px}
+#start .rb b{font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#start .rq{color:#5E5652;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#start .ra{display:flex;gap:4px;flex-wrap:nowrap}
+#start .ra .btn{min-height:26px;padding:2px 8px;font-size:11px;white-space:nowrap}
+#start .chip.r{background:#F8E1E1;color:#8A2525}
+#start .sel{appearance:none;-webkit-appearance:none;font:inherit;font-size:12px;font-weight:600;padding:3px 24px 3px 9px;border-radius:999px;border:0;background:#EAE4E1 url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'><path d='M1 1l4 4 4-4' fill='none' stroke='%233C261D' stroke-width='1.5'/></svg>") no-repeat right 9px center;color:#3C261D;cursor:pointer;min-height:26px;line-height:1.3}
+#start .sel.b{background-color:#E3EAF6;color:#24467C;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'><path d='M1 1l4 4 4-4' fill='none' stroke='%2324467C' stroke-width='1.5'/></svg>")}
+#start .sel:hover{filter:brightness(.96)}
+
+
+#projekt{margin:0;font-family:Inter,system-ui,sans-serif;color:#1C2024;background:#F7F4F2;font-size:14px;line-height:1.45}
+#projekt a{color:#D55C05}a:hover{color:#B04C04}
+#projekt .nav a{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;color:#EAE4E1;text-decoration:none;font-weight:500;min-height:44px;box-sizing:border-box}
+#projekt .nav a:hover{background:rgba(255,255,255,.08);color:#fff}
+#projekt .nav a.on{background:rgba(255,255,255,.14);color:#fff}
+#projekt .nav svg{width:18px;height:18px;flex:none}
+#projekt .card{background:#fff;border:1px solid #E6DFDB;border-radius:12px}
+#projekt .btn{display:inline-flex;align-items:center;gap:8px;padding:10px 16px;border-radius:8px;border:1px solid #C1B2AA;background:#fff;color:#1C2024;font:inherit;font-weight:600;cursor:pointer;min-height:44px;text-decoration:none}
+#projekt .btn:hover{background:#F7F4F2}
+#projekt .btn.p{background:#D55C05;border-color:#D55C05;color:#fff}
+#projekt .btn.p:hover{background:#B04C04;color:#fff}
+#projekt .chip{display:inline-flex;align-items:center;padding:3px 9px;border-radius:999px;font-size:12px;font-weight:600;background:#EAE4E1;color:#3C261D;white-space:nowrap;line-height:1.3}
+#projekt .chip.o{background:#FBE8DA;color:#9A4204}
+#projekt .chip.g{background:#E1F0E6;color:#1E6B3A}
+#projekt .chip.b{background:#E3EAF6;color:#24467C}
+#projekt .muted{color:#5E5652}
+#projekt h1,#projekt h2,#projekt h3{margin:0;font-weight:700}
+#projekt .row{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px 18px;border-top:1px solid #EFEAE7;text-decoration:none;color:#1C2024}
+#projekt .row:hover{background:#FBF9F8}
+#projekt .tab{padding:10px 14px;border-radius:8px;font-weight:600;color:#5E5652;text-decoration:none;min-height:44px;display:inline-flex;align-items:center}
+#projekt .tab.on{background:#fff;color:#1C2024;border:1px solid #E6DFDB}
+#projekt .folder{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;color:#1C2024;text-decoration:none}
+#projekt .folder:hover{background:#FBF9F8}
+#projekt .wk{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px}
+#projekt .wd{display:flex;flex-direction:column;gap:6px;min-width:0;padding:10px 10px 12px;border-radius:10px;border:1px solid #EFEAE7;background:#FBF9F8}
+#projekt .wd.t{background:#fff;border-color:#D55C05;box-shadow:0 0 0 2px #FBE8DA}
+#projekt .wh{display:flex;align-items:baseline;gap:6px;font-size:12px;color:#5E5652;font-weight:600}
+#projekt .wh b{font-size:14px;color:#1C2024}
+#projekt .wd.t .wh b{color:#D55C05}
+#projekt .wi{font-size:12px;line-height:1.35;padding:6px 8px;border-radius:7px;background:#fff;border:1px solid #EFEAE7;display:flex;flex-direction:column;gap:2px;min-width:0}
+#projekt .wd.t .wi{background:#FBF9F8}
+#projekt .wi .k{font-size:10px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;color:#5E5652}
+#projekt .wi.termin .k{color:#9A4204}.wi.agent .k{color:#24467C}.wi.frist .k{color:#8A2525}.wi.erledigt .k{color:#1E6B3A}
+#projekt .wi .p{font-size:11px;color:#5E5652;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#projekt .chip.r{background:#F8E1E1;color:#8A2525}
+#projekt .rad{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 14px}
+#projekt .rr{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:center;padding:7px 10px 7px 12px;border-radius:9px;border:1px solid #E6DFDB;background:#fff;border-left-width:4px;min-width:0}
+#projekt .rr.block{border-left-color:#8A2525}.rr.ext{border-left-color:#D55C05}.rr.dl{border-left-color:#9A4204}
+#projekt .rh{display:flex;flex-direction:column;gap:3px;align-items:flex-start;font-size:10px;width:92px}
+#projekt .rh .chip{font-size:10px;padding:1px 7px}
+#projekt .rb{display:flex;flex-direction:column;gap:1px;min-width:0;font-size:12px}
+#projekt .rb b{font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#projekt .rq{color:#5E5652;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#projekt .ra{display:flex;gap:4px;flex-wrap:nowrap}
+#projekt .ra .btn{min-height:26px;padding:2px 8px;font-size:11px;white-space:nowrap}
+#projekt .chip.r{background:#F8E1E1;color:#8A2525}
+/* compact: one screen at 1440x900 */
+#projekt main{padding:12px 32px !important;gap:8px !important}
+#projekt h1{font-size:20px !important}
+#projekt .tab{min-height:36px;padding:6px 12px}
+#projekt .row{padding:7px 16px !important;gap:12px}
+#projekt .row .muted{font-size:11px}
+
+#projekt .folder{padding:3px 10px;font-size:13px}
+#projekt .rad{gap:5px 12px}
+#projekt .rr{padding:4px 10px 4px 12px}
+#projekt main > div[style*="grid-template-columns: repeat(3"]{gap:12px !important}
+#projekt section.card > div[style*="padding: 16px 18px 8px"]{padding:10px 14px 4px !important}
+#projekt section.card h2{font-size:14px !important}
+#projekt section.card > div[style*="padding: 0 18px 16px"]{padding:0 14px 10px !important;font-size:12px !important;line-height:1.45 !important}
+#projekt section.card > div[style*="padding: 0 18px 14px"]{padding:0 14px 6px !important;gap:4px !important}
+#projekt section.card > div[style*="border-top: 1px solid #EFEAE7; padding: 12px 18px"]{padding:6px 14px !important}
+#projekt .td{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:center;padding:3px 14px;border-top:1px solid #EFEAE7;font-size:12px}
+#projekt .td input{width:16px;height:16px;margin:0;accent-color:#D55C05}
+#projekt .td label{display:flex;flex-direction:column;gap:1px;min-width:0;cursor:pointer}
+#projekt .td label b{font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#projekt .td-m{display:flex;gap:8px;align-items:center;color:#5E5652;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#projekt .td-m .chip{font-size:10px;padding:1px 7px}
+#projekt .chip.r{background:#F8E1E1;color:#8A2525}
+#projekt .av{width:24px;height:24px;border-radius:50%;background:#3C261D;color:#fff;font-size:10px;font-weight:700;display:inline-flex;align-items:center;justify-content:center}
+#projekt .av.t{background:#C1B2AA;color:#3C261D}
+
+
+#chat{margin:0;font-family:Inter,system-ui,sans-serif;color:#1C2024;background:#F7F4F2;font-size:14px;line-height:1.45}
+#chat main{line-height:1.5}
+#chat a{color:#D55C05}a:hover{color:#B04C04}
+#chat .nav a{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;color:#EAE4E1;text-decoration:none;font-weight:500;min-height:44px;box-sizing:border-box}
+#chat .nav a:hover{background:rgba(255,255,255,.08);color:#fff}
+#chat .nav a.on{background:rgba(255,255,255,.14);color:#fff}
+#chat .nav svg{width:18px;height:18px;flex:none}
+#chat .card{background:#fff;border:1px solid #E6DFDB;border-radius:12px}
+#chat .btn{display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border-radius:8px;border:1px solid #C1B2AA;background:#fff;color:#1C2024;font:inherit;font-weight:600;cursor:pointer;min-height:44px;text-decoration:none;font-size:13px}
+#chat .btn:hover{background:#F7F4F2}
+#chat .btn.p{background:#D55C05;border-color:#D55C05;color:#fff}
+#chat .btn.p:hover{background:#B04C04;color:#fff}
+#chat .btn.s{min-height:36px;padding:6px 12px}
+#chat .chip{display:inline-flex;align-items:center;padding:3px 9px;border-radius:999px;font-size:12px;font-weight:600;background:#EAE4E1;color:#3C261D;white-space:nowrap;line-height:1.3}
+#chat .chip.o{background:#FBE8DA;color:#9A4204}
+#chat .chip.g{background:#E1F0E6;color:#1E6B3A}
+#chat .chip.b{background:#E3EAF6;color:#24467C}
+#chat .muted{color:#5E5652}
+#chat h1,#chat h2,#chat h3{margin:0;font-weight:700}
+#chat .src{display:inline-flex;align-items:center;gap:4px;padding:1px 7px;border-radius:6px;background:#FBE8DA;color:#9A4204;font-size:11px;font-weight:700;text-decoration:none;vertical-align:middle}
+#chat .src:hover{background:#F6D5BC;color:#9A4204}
+#chat .srcrow{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-top:1px solid #EFEAE7;text-decoration:none;color:#1C2024}
+#chat .srcrow:hover{background:#FBF9F8}
+#chat .hist{display:block;padding:9px 12px;border-radius:8px;color:#1C2024;text-decoration:none;font-size:13px}
+#chat .hist:hover{background:#FBF9F8}
+#chat .hist.on{background:#EAE4E1;font-weight:600}
+#chat .cmt{font-size:12px;padding:8px 10px;border-radius:8px;background:#F7F4F2;margin-top:8px}
+/* compact: one screen at 1440x900 */
+#chat main{padding:14px 32px !important;gap:10px !important}
+#chat h1{font-size:20px !important}
+#chat .tab{min-height:36px;padding:6px 12px}
+#chat .row{padding:7px 16px !important;gap:12px}
+#chat .row .muted{font-size:11px}
+
+#chat main > section{padding:14px 24px !important;gap:10px !important}
+#chat main > aside{padding:14px 16px !important;gap:10px !important}
+#chat .srcrow{padding:6px 0}
+#chat .card[style*="padding: 20px 22px"]{padding:12px 16px !important;gap:8px !important}
+#chat .card[style*="padding: 12px 16px"]{padding:8px 12px !important;gap:6px !important}
+#chat .cmt{margin-top:2px;padding:6px 8px}
+#chat div[style*="max-width: 72%"]{padding:8px 12px !important;font-size:13px}
+#chat main > aside .srcrow{padding:4px 0}
+#chat main > aside .srcrow .muted{font-size:11px}
+#chat main > aside h2{font-size:13px !important}
+#chat main > section > div[style*="gap: 16px; flex: 1"]{gap:10px !important}
+#chat main .btn.s{min-height:30px;padding:3px 10px;font-size:12px}
+#chat main select{min-height:30px !important;padding:4px 8px !important;font-size:12px !important}
+#chat .hist{padding:7px 12px}
+
+
+#gedaechtnis{margin:0;font-family:Inter,system-ui,sans-serif;color:#1C2024;background:#F7F4F2;font-size:14px;line-height:1.45}
+#gedaechtnis a{color:#D55C05}a:hover{color:#B04C04}
+#gedaechtnis .nav a{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;color:#EAE4E1;text-decoration:none;font-weight:500;min-height:44px;box-sizing:border-box}
+#gedaechtnis .nav a:hover{background:rgba(255,255,255,.08);color:#fff}
+#gedaechtnis .nav a.on{background:rgba(255,255,255,.14);color:#fff}
+#gedaechtnis .nav svg{width:18px;height:18px;flex:none}
+#gedaechtnis .card{background:#fff;border:1px solid #E6DFDB;border-radius:12px}
+#gedaechtnis .btn{display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border-radius:8px;border:1px solid #C1B2AA;background:#fff;color:#1C2024;font:inherit;font-weight:600;cursor:pointer;min-height:44px;text-decoration:none;font-size:13px}
+#gedaechtnis .btn:hover{background:#F7F4F2}
+#gedaechtnis .btn.p{background:#D55C05;border-color:#D55C05;color:#fff}
+#gedaechtnis .btn.p:hover{background:#B04C04;color:#fff}
+#gedaechtnis .btn.s{min-height:36px;padding:6px 12px}
+#gedaechtnis .chip{display:inline-flex;align-items:center;padding:3px 9px;border-radius:999px;font-size:12px;font-weight:600;background:#EAE4E1;color:#3C261D;white-space:nowrap;line-height:1.3}
+#gedaechtnis .chip.o{background:#FBE8DA;color:#9A4204}
+#gedaechtnis .chip.g{background:#E1F0E6;color:#1E6B3A}
+#gedaechtnis .chip.b{background:#E3EAF6;color:#24467C}
+#gedaechtnis .muted{color:#5E5652}
+#gedaechtnis h1,#gedaechtnis h2,#gedaechtnis h3{margin:0;font-weight:700}
+#gedaechtnis .tab{padding:10px 14px;border-radius:8px;font-weight:600;color:#5E5652;text-decoration:none;min-height:44px;display:inline-flex;align-items:center}
+#gedaechtnis .tab.on{background:#fff;color:#1C2024;border:1px solid #E6DFDB}
+#gedaechtnis .ag{display:flex;flex-direction:column;gap:10px;padding:16px 18px;background:#fff;border:1px solid #E6DFDB;border-radius:12px}
+#gedaechtnis .ag h3{font-size:14px}
+#gedaechtnis .ic{width:34px;height:34px;border-radius:9px;background:#3C261D;display:inline-flex;align-items:center;justify-content:center;flex:none}
+#gedaechtnis .ic svg{width:18px;height:18px;stroke:#EAE4E1;fill:none;stroke-width:2}
+
+#gedaechtnis .w{display:flex;flex-direction:column;gap:8px;padding:14px 16px;background:#fff;border:1px solid #E6DFDB;border-radius:12px;text-decoration:none;color:#1C2024}
+#gedaechtnis .w:hover{background:#FBF9F8}
+#gedaechtnis .w h3{font-size:14px}
+#gedaechtnis .lvl{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700;letter-spacing:.4px;text-transform:uppercase}
+#gedaechtnis .lvl i{width:8px;height:8px;border-radius:50%;display:inline-block}
+#gedaechtnis .src{display:inline-flex;align-items:center;gap:4px;padding:1px 7px;border-radius:6px;background:#E3EAF6;color:#24467C;font-size:11px;font-weight:700;text-decoration:none;vertical-align:middle}
+#gedaechtnis .src:hover{background:#CFDBF0;color:#24467C}
+/* compact: one screen at 1440x900 */
+#gedaechtnis main{padding:14px 32px !important;gap:10px !important}
+#gedaechtnis h1{font-size:20px !important}
+#gedaechtnis .tab{min-height:36px;padding:6px 12px}
+#gedaechtnis .row{padding:7px 16px !important;gap:12px}
+#gedaechtnis .row .muted{font-size:11px}
+
+#gedaechtnis .w{padding:10px 12px;gap:5px}
+#gedaechtnis .w h3{font-size:13px}
+#gedaechtnis main > div[style*="grid-template-columns: repeat(4"]{gap:10px !important}
+#gedaechtnis .card[style*="border-color: #D55C05"]{padding:10px 14px !important;gap:8px !important}
+#gedaechtnis .card[style*="border-color: #D55C05"] div[style*="font-size: 13px; line-height: 1.55"]{font-size:12px !important;line-height:1.45 !important}
+
+
+#angebote{margin:0;font-family:Inter,system-ui,sans-serif;color:#1C2024;background:#F7F4F2;font-size:14px;line-height:1.45}
+#angebote a{color:#D55C05}a:hover{color:#B04C04}
+#angebote .nav a{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;color:#EAE4E1;text-decoration:none;font-weight:500;min-height:44px;box-sizing:border-box}
+#angebote .nav a:hover{background:rgba(255,255,255,.08);color:#fff}
+#angebote .nav a.on{background:rgba(255,255,255,.14);color:#fff}
+#angebote .nav svg{width:18px;height:18px;flex:none}
+#angebote .card{background:#fff;border:1px solid #E6DFDB;border-radius:12px}
+#angebote .btn{display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border-radius:8px;border:1px solid #C1B2AA;background:#fff;color:#1C2024;font:inherit;font-weight:600;cursor:pointer;min-height:44px;text-decoration:none;font-size:13px}
+#angebote .btn:hover{background:#F7F4F2}
+#angebote .btn.p{background:#D55C05;border-color:#D55C05;color:#fff}
+#angebote .btn.p:hover{background:#B04C04;color:#fff}
+#angebote .btn.s{min-height:36px;padding:6px 12px}
+#angebote .chip{display:inline-flex;align-items:center;padding:3px 9px;border-radius:999px;font-size:12px;font-weight:600;background:#EAE4E1;color:#3C261D;white-space:nowrap;line-height:1.3}
+#angebote .chip.o{background:#FBE8DA;color:#9A4204}
+#angebote .chip.g{background:#E1F0E6;color:#1E6B3A}
+#angebote .chip.b{background:#E3EAF6;color:#24467C}
+#angebote .muted{color:#5E5652}
+#angebote h1,#angebote h2,#angebote h3{margin:0;font-weight:700}
+#angebote .tab{padding:10px 14px;border-radius:8px;font-weight:600;color:#5E5652;text-decoration:none;min-height:44px;display:inline-flex;align-items:center}
+#angebote .tab.on{background:#fff;color:#1C2024;border:1px solid #E6DFDB}
+#angebote .ag{display:flex;flex-direction:column;gap:10px;padding:16px 18px;background:#fff;border:1px solid #E6DFDB;border-radius:12px}
+#angebote .ag h3{font-size:14px}
+#angebote .ic{width:34px;height:34px;border-radius:9px;background:#3C261D;display:inline-flex;align-items:center;justify-content:center;flex:none}
+#angebote .ic svg{width:18px;height:18px;stroke:#EAE4E1;fill:none;stroke-width:2}
+
+#angebote .w{display:flex;flex-direction:column;gap:8px;padding:14px 16px;background:#fff;border:1px solid #E6DFDB;border-radius:12px;text-decoration:none;color:#1C2024}
+#angebote .w:hover{background:#FBF9F8}
+#angebote .w h3{font-size:14px}
+#angebote .lvl{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700;letter-spacing:.4px;text-transform:uppercase}
+#angebote .lvl i{width:8px;height:8px;border-radius:50%;display:inline-block}
+#angebote .src{display:inline-flex;align-items:center;gap:4px;padding:1px 7px;border-radius:6px;background:#E3EAF6;color:#24467C;font-size:11px;font-weight:700;text-decoration:none;vertical-align:middle}
+#angebote .src:hover{background:#CFDBF0;color:#24467C}
+#angebote .step{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border-radius:10px;background:#fff;border:1px solid #E6DFDB}
+#angebote .step.done{border-color:#1E6B3A}
+#angebote .lop h2{font-size:15px;margin-top:10px}
+#angebote .lop p{margin:4px 0;font-size:13px;line-height:1.55}
+#angebote .ref{display:inline-flex;align-items:center;padding:1px 7px;border-radius:6px;background:#E3EAF6;color:#24467C;font-size:11px;font-weight:700;text-decoration:none;vertical-align:middle}
+
+
+#agenten{margin:0;font-family:Inter,system-ui,sans-serif;color:#1C2024;background:#F7F4F2;font-size:14px;line-height:1.45}
+#agenten a{color:#D55C05}a:hover{color:#B04C04}
+#agenten .nav a{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;color:#EAE4E1;text-decoration:none;font-weight:500;min-height:44px;box-sizing:border-box}
+#agenten .nav a:hover{background:rgba(255,255,255,.08);color:#fff}
+#agenten .nav a.on{background:rgba(255,255,255,.14);color:#fff}
+#agenten .nav svg{width:18px;height:18px;flex:none}
+#agenten .card{background:#fff;border:1px solid #E6DFDB;border-radius:12px}
+#agenten .btn{display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border-radius:8px;border:1px solid #C1B2AA;background:#fff;color:#1C2024;font:inherit;font-weight:600;cursor:pointer;min-height:44px;text-decoration:none;font-size:13px}
+#agenten .btn:hover{background:#F7F4F2}
+#agenten .btn.p{background:#D55C05;border-color:#D55C05;color:#fff}
+#agenten .btn.p:hover{background:#B04C04;color:#fff}
+#agenten .btn.s{min-height:36px;padding:6px 12px}
+#agenten .chip{display:inline-flex;align-items:center;padding:3px 9px;border-radius:999px;font-size:12px;font-weight:600;background:#EAE4E1;color:#3C261D;white-space:nowrap;line-height:1.3}
+#agenten .chip.o{background:#FBE8DA;color:#9A4204}
+#agenten .chip.g{background:#E1F0E6;color:#1E6B3A}
+#agenten .chip.b{background:#E3EAF6;color:#24467C}
+#agenten .muted{color:#5E5652}
+#agenten h1,#agenten h2,#agenten h3{margin:0;font-weight:700}
+#agenten .tab{padding:10px 14px;border-radius:8px;font-weight:600;color:#5E5652;text-decoration:none;min-height:44px;display:inline-flex;align-items:center}
+#agenten .tab.on{background:#fff;color:#1C2024;border:1px solid #E6DFDB}
+#agenten .ag{display:flex;flex-direction:column;gap:10px;padding:16px 18px;background:#fff;border:1px solid #E6DFDB;border-radius:12px}
+#agenten .ag h3{font-size:14px}
+#agenten .ic{width:34px;height:34px;border-radius:9px;background:#3C261D;display:inline-flex;align-items:center;justify-content:center;flex:none}
+#agenten .ic svg{width:18px;height:18px;stroke:#EAE4E1;fill:none;stroke-width:2}
+/* compact: one screen at 1440x900 */
+#agenten main{padding:14px 32px !important;gap:10px !important}
+#agenten h1{font-size:20px !important}
+#agenten .tab{min-height:36px;padding:6px 12px}
+#agenten .row{padding:7px 16px !important;gap:12px}
+#agenten .row .muted{font-size:11px}
+
+#agenten .ag{padding:10px 14px;gap:6px}
+#agenten main > div[style*="grid-template-columns: repeat(3"]{gap:10px !important}
+#agenten .ag div[style*="font-size: 13px"]{font-size:12px !important}
+
+
+#agent-bauen{margin:0;font-family:Inter,system-ui,sans-serif;color:#1C2024;background:#F7F4F2;font-size:14px;line-height:1.45}
+#agent-bauen a{color:#D55C05}a:hover{color:#B04C04}
+#agent-bauen .nav a{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;color:#EAE4E1;text-decoration:none;font-weight:500;min-height:44px;box-sizing:border-box}
+#agent-bauen .nav a:hover{background:rgba(255,255,255,.08);color:#fff}
+#agent-bauen .nav a.on{background:rgba(255,255,255,.14);color:#fff}
+#agent-bauen .nav svg{width:18px;height:18px;flex:none}
+#agent-bauen .card{background:#fff;border:1px solid #E6DFDB;border-radius:12px}
+#agent-bauen .btn{display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border-radius:8px;border:1px solid #C1B2AA;background:#fff;color:#1C2024;font:inherit;font-weight:600;cursor:pointer;min-height:44px;text-decoration:none;font-size:13px}
+#agent-bauen .btn:hover{background:#F7F4F2}
+#agent-bauen .btn.p{background:#D55C05;border-color:#D55C05;color:#fff}
+#agent-bauen .btn.p:hover{background:#B04C04;color:#fff}
+#agent-bauen .btn.s{min-height:36px;padding:6px 12px}
+#agent-bauen .chip{display:inline-flex;align-items:center;padding:3px 9px;border-radius:999px;font-size:12px;font-weight:600;background:#EAE4E1;color:#3C261D;white-space:nowrap;line-height:1.3}
+#agent-bauen .chip.o{background:#FBE8DA;color:#9A4204}
+#agent-bauen .chip.g{background:#E1F0E6;color:#1E6B3A}
+#agent-bauen .chip.b{background:#E3EAF6;color:#24467C}
+#agent-bauen .muted{color:#5E5652}
+#agent-bauen h1,#agent-bauen h2,#agent-bauen h3{margin:0;font-weight:700}
+#agent-bauen label.l{display:block;font-size:12px;font-weight:600;color:#5E5652;margin-bottom:6px}
+#agent-bauen input.f,#agent-bauen textarea.f,#agent-bauen select.f{width:100%;box-sizing:border-box;font:inherit;font-size:14px;padding:10px 12px;border:1px solid #C1B2AA;border-radius:8px;background:#fff;min-height:44px}
+#agent-bauen textarea.f{resize:vertical}
+#agent-bauen .tool{display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid #E6DFDB;border-radius:10px;background:#fff;cursor:pointer}
+#agent-bauen .tool.on{border-color:#D55C05;background:#FFF8F3}
+#agent-bauen .tool input{width:18px;height:18px;margin:0;accent-color:#D55C05}
+#agent-bauen .step{display:flex;gap:12px;align-items:flex-start;padding:12px 14px;border:1px solid #E6DFDB;border-radius:10px;background:#fff}
+#agent-bauen .sel{appearance:none}
+/* compact: one screen at 1440x900 */
+#agent-bauen main{padding:14px 32px !important;gap:10px !important}
+#agent-bauen h1{font-size:20px !important}
+#agent-bauen .tab{min-height:36px;padding:6px 12px}
+#agent-bauen .row{padding:7px 16px !important;gap:12px}
+#agent-bauen .row .muted{font-size:11px}
+
+#agent-bauen main > section{padding:14px 24px !important;gap:10px !important}
+#agent-bauen main > aside{padding:14px 16px !important;gap:8px !important}
+#agent-bauen .card[style*="padding: 18px"]{padding:10px 14px !important;gap:8px !important}
+#agent-bauen .tool{padding:4px 8px;gap:6px;font-size:11px;line-height:1.2;align-items:center;min-height:26px}
+#agent-bauen .tool span{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#agent-bauen .tool input{width:15px;height:15px}
+#agent-bauen .step{padding:8px 10px}
+#agent-bauen label.l{margin-bottom:3px}
+#agent-bauen input.f,#agent-bauen select.f{min-height:36px;padding:7px 10px}
+#agent-bauen textarea.f{padding:7px 10px}
+#agent-bauen h2{font-size:13px !important}
+
+
+#datenmodus{margin:0;font-family:Inter,system-ui,sans-serif;color:#1C2024;background:#F7F4F2;font-size:14px;line-height:1.45}
+#datenmodus a{color:#D55C05}a:hover{color:#B04C04}
+#datenmodus .nav a{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;color:#EAE4E1;text-decoration:none;font-weight:500;min-height:44px;box-sizing:border-box}
+#datenmodus .nav a:hover{background:rgba(255,255,255,.08);color:#fff}
+#datenmodus .nav a.on{background:rgba(255,255,255,.14);color:#fff}
+#datenmodus .nav svg{width:18px;height:18px;flex:none}
+#datenmodus .card{background:#fff;border:1px solid #E6DFDB;border-radius:12px}
+#datenmodus .btn{display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border-radius:8px;border:1px solid #C1B2AA;background:#fff;color:#1C2024;font:inherit;font-weight:600;cursor:pointer;min-height:44px;text-decoration:none;font-size:13px}
+#datenmodus .btn:hover{background:#F7F4F2}
+#datenmodus .btn.p{background:#D55C05;border-color:#D55C05;color:#fff}
+#datenmodus .btn.p:hover{background:#B04C04;color:#fff}
+#datenmodus .btn.s{min-height:36px;padding:6px 12px}
+#datenmodus .chip{display:inline-flex;align-items:center;padding:3px 9px;border-radius:999px;font-size:12px;font-weight:600;background:#EAE4E1;color:#3C261D;white-space:nowrap;line-height:1.3}
+#datenmodus .chip.o{background:#FBE8DA;color:#9A4204}
+#datenmodus .chip.g{background:#E1F0E6;color:#1E6B3A}
+#datenmodus .chip.b{background:#E3EAF6;color:#24467C}
+#datenmodus .muted{color:#5E5652}
+#datenmodus h1,#datenmodus h2,#datenmodus h3{margin:0;font-weight:700}
+#datenmodus table{border-collapse:collapse;width:100%;font-size:13px}
+#datenmodus th{text-align:left;font-size:12px;color:#5E5652;font-weight:600;padding:8px 10px;background:#F7F4F2;border-bottom:1px solid #E6DFDB}
+#datenmodus td{padding:9px 10px;border-bottom:1px solid #EFEAE7;white-space:nowrap}
+#datenmodus td.n,#datenmodus th.n{text-align:right;font-variant-numeric:tabular-nums}
+#datenmodus .bar{display:flex;flex-direction:column;align-items:center;gap:6px;flex:1}
+#datenmodus .bar .c{width:100%;display:flex;flex-direction:column;justify-content:flex-end;height:160px}
+#datenmodus .bar .b{width:100%;border-radius:4px 4px 0 0;background:#3C261D}
+#datenmodus .bar .b.o{background:#D55C05}
+#datenmodus .bar .l{font-size:11px;color:#5E5652;text-align:center}
+
+
+#admin{margin:0;font-family:Inter,system-ui,sans-serif;color:#1C2024;background:#F7F4F2;font-size:14px;line-height:1.45}
+#admin a{color:#D55C05}a:hover{color:#B04C04}
+#admin .nav a{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;color:#EAE4E1;text-decoration:none;font-weight:500;min-height:44px;box-sizing:border-box}
+#admin .nav a:hover{background:rgba(255,255,255,.08);color:#fff}
+#admin .nav a.on{background:rgba(255,255,255,.14);color:#fff}
+#admin .nav svg{width:18px;height:18px;flex:none}
+#admin .card{background:#fff;border:1px solid #E6DFDB;border-radius:12px}
+#admin .btn{display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border-radius:8px;border:1px solid #C1B2AA;background:#fff;color:#1C2024;font:inherit;font-weight:600;cursor:pointer;min-height:44px;text-decoration:none;font-size:13px}
+#admin .btn:hover{background:#F7F4F2}
+#admin .btn.p{background:#D55C05;border-color:#D55C05;color:#fff}
+#admin .btn.p:hover{background:#B04C04;color:#fff}
+#admin .btn.s{min-height:36px;padding:6px 12px}
+#admin .chip{display:inline-flex;align-items:center;padding:3px 9px;border-radius:999px;font-size:12px;font-weight:600;background:#EAE4E1;color:#3C261D;white-space:nowrap;line-height:1.3}
+#admin .chip.o{background:#FBE8DA;color:#9A4204}
+#admin .chip.g{background:#E1F0E6;color:#1E6B3A}
+#admin .chip.b{background:#E3EAF6;color:#24467C}
+#admin .chip.r{background:#F8E1E1;color:#8A2525}
+#admin .muted{color:#5E5652}
+#admin h1,#admin h2,#admin h3{margin:0;font-weight:700}
+#admin table{border-collapse:collapse;width:100%;font-size:13px}
+#admin th{text-align:left;font-size:12px;color:#5E5652;font-weight:600;padding:8px 10px;background:#F7F4F2;border-bottom:1px solid #E6DFDB}
+#admin td{padding:9px 10px;border-bottom:1px solid #EFEAE7}
+#admin td.n,#admin th.n{text-align:right;font-variant-numeric:tabular-nums}
+#admin .tab{padding:10px 14px;border-radius:8px;font-weight:600;color:#5E5652;text-decoration:none;min-height:44px;display:inline-flex;align-items:center}
+#admin .tab.on{background:#fff;color:#1C2024;border:1px solid #E6DFDB}
+#admin .kpi{padding:14px 16px;display:flex;flex-direction:column;gap:4px}
+#admin .kpi .v{font-size:24px;font-weight:700}
+#admin .kpi .k{font-size:11px;font-weight:600;letter-spacing:.5px;color:#5E5652}
+#admin .tog{width:36px;height:20px;border-radius:10px;background:#D55C05;position:relative;display:inline-block}
+#admin .tog.off{background:#C1B2AA}
+#admin .tog i{position:absolute;top:2px;right:2px;width:16px;height:16px;border-radius:50%;background:#fff}
+#admin .tog.off i{right:auto;left:2px}
+
+.screen{min-height:100%}
+main{padding-left:max(16px,env(safe-area-inset-left,0px)) !important;padding-right:max(16px,env(safe-area-inset-right,0px)) !important}
+@media (min-width:900px){main{padding-left:32px !important;padding-right:32px !important}}
+@media (max-width:899px){
+  aside[style*="width: 248px"]{width:100% !important;flex:1 1 100% !important;flex-direction:row !important;flex-wrap:wrap !important;align-items:center !important;gap:8px 12px !important;padding:10px max(16px,env(safe-area-inset-right,0px)) 10px max(16px,env(safe-area-inset-left,0px)) !important;position:sticky;top:0;z-index:15}
+  aside[style*="width: 248px"] > div:first-child{padding:0 !important;display:flex;align-items:baseline;gap:8px}
+  aside[style*="width: 248px"] > div:first-child > div:first-child{font-size:20px !important}
+  aside[style*="width: 248px"] > div:first-child > div:nth-child(2){display:none}
+  aside[style*="width: 248px"] > div:first-child > div:nth-child(3){margin-top:0 !important}
+  aside[style*="width: 248px"] nav{flex:1 1 100%;flex-direction:row !important;overflow-x:auto;gap:4px !important;-webkit-overflow-scrolling:touch}
+  aside[style*="width: 248px"] nav a{white-space:nowrap;min-height:36px;padding:6px 10px;font-size:13px}
+  aside[style*="width: 248px"] nav svg{width:15px;height:15px}
+  aside[style*="width: 248px"] > div[style*="margin-top: auto"]{display:none !important}
+  aside[style*="width: 248px"] > div:has(.hist){display:none !important}
+  main{padding-top:12px !important}
+  .screen > div{min-height:0 !important}
+  main *{min-width:0}
+  .chip{white-space:normal !important}
+  .row{flex-wrap:wrap}
+  main > section{overflow-x:hidden}
+  main > div:has(> .tab){overflow-x:auto;flex-wrap:nowrap !important}
+  main > div > .tab{white-space:nowrap}
+  main .card{max-width:100%;overflow:visible}
+  main .card input[type=text]{width:100%;min-width:0}
+  main .card > div[style*="justify-content: space-between"]{flex-wrap:wrap}
+  .folder span:not(.muted){white-space:normal}
+  main table{font-size:11px}
+  .rr{grid-template-columns:1fr !important}
+  .rh{width:auto !important;flex-direction:row !important;flex-wrap:wrap}
+  .td{grid-template-columns:auto minmax(0,1fr) !important}
+  .td .av{display:none}
+  .td label b,.td-m{white-space:normal !important}
+  main > section, main > aside{max-width:none !important;border-left:0 !important;border-right:0 !important;flex-basis:100% !important}
+  [style*="grid-template-columns: repeat(2"],[style*="grid-template-columns: repeat(3"],[style*="grid-template-columns: repeat(4"],[style*="grid-template-columns: repeat(5"],[style*="grid-template-columns: 1.5fr 1fr"],[style*="grid-template-columns: 1.3fr 1fr"],.rad{grid-template-columns:minmax(0,1fr) !important}
+  [style*="grid-column: span 2"]{grid-column:auto !important}
+  [style*="max-width: 72%"]{max-width:100% !important}
+  .rr{grid-template-columns:1fr !important}
+  .rb b,.rq{white-space:normal !important}
+}
+.logout-btn{position:absolute;top:22px;right:16px;display:inline-flex;align-items:center;gap:6px;padding:5px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.35);color:#EAE4E1 !important;font-size:11px;font-weight:600;text-decoration:none;min-height:28px;z-index:2}
+.logout-btn:hover{background:rgba(255,255,255,.12);color:#fff}
+@media (max-width:899px){.logout-btn{position:static;order:5;margin-left:auto}}
+.demo{position:fixed;right:max(12px,env(safe-area-inset-right,0px));bottom:calc(10px + env(safe-area-inset-bottom,0px));padding:6px 12px;border-radius:999px;background:#1C2024;color:#EAE4E1;font-size:11px;z-index:20;box-shadow:0 2px 8px rgba(0,0,0,.25)}
+.demo b{color:#fff}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+</style>
+</head>
+<body>
+<section id="login" class="screen" hidden>
+  <div style="min-height: 100vh; box-sizing: border-box; display: flex; align-items: center; justify-content: center; background: #3C261D; padding: 24px max(16px,env(safe-area-inset-right,0px)) 24px max(16px,env(safe-area-inset-left,0px))">
+    <form id="loginform" style="width: 100%; max-width: 400px; background: #fff; border-radius: 16px; padding: 32px 28px; box-sizing: border-box; display: flex; flex-direction: column; gap: 14px; box-shadow: 0 20px 60px rgba(0,0,0,.35)">
+      <div><div style="font-size: 30px; font-weight: 800; letter-spacing: -1px; color: #3C261D; line-height: 1">WMC</div><div style="font-size: 9px; letter-spacing: 3px; color: #C1B2AA; font-weight: 600; margin-top: 2px">HEALTHCARE</div><div style="margin-top: 10px; display: inline-flex; align-items: center; gap: 8px; color: #1C2024; font-size: 13px; font-weight: 600"><span style="width: 8px; height: 8px; border-radius: 50%; background: #D55C05; display: inline-block"></span>Intelligence</div></div>
+      <h1 style="margin: 4px 0 0; font-size: 20px; font-weight: 700; color: #1C2024">Anmelden</h1>
+      <label for="lu" style="font-size: 12px; font-weight: 600; color: #5E5652">Benutzername</label>
+      <input id="lu" type="text" autocomplete="username" placeholder="vorname.nachname" style="font: inherit; font-size: 15px; padding: 11px 12px; border: 1px solid #C1B2AA; border-radius: 8px; min-height: 44px">
+      <label for="lp" style="font-size: 12px; font-weight: 600; color: #5E5652">Passwort</label>
+      <input id="lp" type="password" autocomplete="current-password" placeholder="••••••••" style="font: inherit; font-size: 15px; padding: 11px 12px; border: 1px solid #C1B2AA; border-radius: 8px; min-height: 44px">
+      <div id="lerr" hidden style="font-size: 12px; color: #8A2525; font-weight: 600">Benutzername oder Passwort unbekannt.</div>
+      <button type="submit" style="font: inherit; font-weight: 700; font-size: 15px; min-height: 46px; border: 0; border-radius: 8px; background: #D55C05; color: #fff; cursor: pointer">Anmelden</button>
+      <div style="font-size: 11px; color: #5E5652; text-align: center">SSO · Microsoft Entra ID (WMC) · Verschlüsselt in Deutschland</div>
+    </form>
+  </div>
+</section>
+<section class="screen" id="start" hidden>
+<div style="min-height: 100vh; display: flex; flex-wrap: wrap; align-items: stretch">
+
+<aside style="position: relative; width: 248px; flex: 0 0 248px; background: #3C261D; display: flex; flex-direction: column; padding: 24px 16px; box-sizing: border-box; gap: 24px">
+  <div style="padding: 0 8px">
+    <a class="logout-btn" href="#logout" title="Abmelden"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14" aria-hidden="true"><path d="M10 17l5-5-5-5M15 12H3M21 3v18"/></svg>Abmelden</a><div style="font-size: 30px; font-weight: 800; letter-spacing: -1px; color: #fff; line-height: 1">WMC</div>
+    <div style="font-size: 9px; letter-spacing: 3px; color: #C1B2AA; font-weight: 600; margin-top: 2px">HEALTHCARE</div>
+    <div style="margin-top: 14px; display: inline-flex; align-items: center; gap: 8px; color: #EAE4E1; font-size: 12px; font-weight: 600">
+      <span style="width: 8px; height: 8px; border-radius: 50%; background: #D55C05; display: inline-block"></span>Intelligence
+    </div>
+  </div>
+  <nav class="nav" style="display: flex; flex-direction: column; gap: 2px">
+    <a class="on" href="#start"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>Start</a>
+    <a href="#projekt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>Projekte</a>
+    <a href="#chat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 5h16v11H8l-4 4z"/></svg>Chat</a>
+    <a href="#gedaechtnis"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 5a2 2 0 0 1 2-2h5v18H6a2 2 0 0 1-2-2zM13 3h5a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-5zM7 8h2M7 12h2M15 8h2M15 12h2"/></svg>Gedächtnis</a>
+    <a href="#angebote"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 3h9l4 4v14H6zM15 3v4h4M9 12h6M9 16h6"/></svg>Angebote</a>
+    <a href="#agenten"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="4" y="7" width="16" height="12" rx="2"/><path d="M12 3v4M8 12h.01M16 12h.01M9 16h6"/></svg>Agenten</a>
+    <a href="#datenmodus"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-8M22 20H2"/></svg>Datenmodus</a>
+    <a href="#admin"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/></svg>WMC-Admin</a>
+  </nav>
+  <div style="margin-top: auto; padding: 12px; border-radius: 10px; background: rgba(255,255,255,.08); color: #EAE4E1; font-size: 12px">
+    <div style="display: flex; align-items: center; gap: 10px">
+      <span style="width: 32px; height: 32px; border-radius: 50%; background: #C1B2AA; color: #3C261D; display: inline-flex; align-items: center; justify-content: center; font-weight: 700"><span class="u-init">CW</span></span>
+      <div style="min-width: 0"><div style="font-weight: 600; color: #fff"><span class="u-name">Christian Wallwiener</span></div><div><span class="u-role">Geschäftsführer</span></div></div>
+    </div>
+    <div style="margin-top: 10px; display: flex; justify-content: space-between"><span>Modellbudget Oktober</span><span style="font-weight: 600">62 %</span></div>
+    <div style="height: 4px; border-radius: 2px; background: rgba(255,255,255,.15); margin-top: 6px"><div style="width: 62%; height: 4px; border-radius: 2px; background: #D55C05"></div></div>
+    <div style="margin-top: 10px; display: flex; flex-direction: column; gap: 6px">
+      <label for="bud-start" style="font-weight: 600; color: #fff">Zusatzbudget anfragen</label>
+      <textarea id="bud-start" rows="2" placeholder="Begründung, z. B. Lenkungskreis vorgezogen, zusätzliche Datenraum-Analyse Musterstadt …" style="width: 100%; box-sizing: border-box; font: inherit; font-size: 12px; padding: 8px; border-radius: 8px; border: 1px solid rgba(255,255,255,.25); background: rgba(255,255,255,.06); color: #fff; resize: vertical"></textarea>
+      <div style="display: flex; flex-direction: column; gap: 6px">
+        <label for="budamt-start" style="position: absolute; left: -9999px">Betrag</label>
+        <input id="budamt-start" type="text" value="+ 500 €" style="width: 100%; font: inherit; font-size: 12px; padding: 8px; border-radius: 8px; border: 1px solid rgba(255,255,255,.25); background: rgba(255,255,255,.06); color: #fff; min-height: 36px; box-sizing: border-box">
+        <button type="button" style="flex: 1; min-height: 36px; border-radius: 8px; border: 0; background: #D55C05; color: #fff; font: inherit; font-size: 12px; font-weight: 600; cursor: pointer">Anfrage an AI-God</button>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<main style="flex: 999 1 560px; min-width: 0; padding: 16px 32px; box-sizing: border-box; display: flex; flex-direction: column; gap: 10px">
+  <div style="display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 16px">
+    <div>
+      <div class="muted" style="font-size: 13px"><span id="today"></span></div>
+      <h1 style="font-size: 24px; letter-spacing: -0.5px; margin-top: 2px"><span id="greet">Guten Tag</span>, <span class="u-first">Christian</span>.</h1>
+    </div>
+    <div style="display: flex; gap: 10px; flex-wrap: wrap">
+      <a class="btn" href="#agent-bauen">Neuen Agenten bauen</a>
+      <a class="btn p" href="#chat">Neuer Chat</a>
+    </div>
+  </div>
+
+  <div class="card" style="padding: 10px 16px; display: flex; flex-wrap: wrap; align-items: center; gap: 12px">
+    <div style="flex: 1 1 320px; display: flex; align-items: center; gap: 12px">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#D55C05" stroke-width="2" width="22" height="22" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+      <label for="q-start" style="position: absolute; left: -9999px">Frage stellen</label>
+      <input id="q-start" type="text" placeholder="Frag WMC Intelligence – im Kontext Deiner Projekte …" style="flex: 1; border: 0; font: inherit; font-size: 15px; outline: none; min-width: 0">
+    </div>
+    <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap">
+      <label for="mdl" style="position: absolute; left: -9999px">Modell</label>
+      <select id="mdl" class="sel b">
+        <optgroup label="Claude (Anthropic)"><option selected>Claude Opus 5.5</option><option>Claude Sonnet 5.5</option><option>Claude Haiku 5.5</option></optgroup>
+        <optgroup label="Lokal (WMC On-Prem)"><option>Llama 3.3 70B · lokal</option><option>Mistral Large · lokal</option></optgroup>
+        <optgroup label="Weitere"><option>GPT-5</option><option>Gemini Pro</option></optgroup>
+        <optgroup label="DANGER"><option>Godmode</option></optgroup>
+      </select>
+      <label for="rsn" style="position: absolute; left: -9999px">Reasoning</label>
+      <select id="rsn" class="sel">
+        <option>Reasoning: Schnell</option><option>Reasoning: Standard</option><option selected>Reasoning: Tief</option>
+      </select>
+      <span class="chip g" id="eu">EU-Verarbeitung · ZDR</span>
+    </div>
+  </div>
+
+  <section class="card" style="padding: 10px 16px 12px; display: flex; flex-direction: column; gap: 8px">
+    <div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap"><h2 style="font-size: 15px">Jetzt wichtig</h2><span class="muted" style="font-size: 12px">Blocker, externe Anfragen, Fristen – aus Mail, WhatsApp, Teams und Projektchats</span></div>
+    <div data-god="0">
+    <div class="rad">
+      <div class="rr ext">
+        <div class="rh"><span class="chip o">Extern · CEO</span><span class="chip">WhatsApp</span><span class="muted">vor 2 Std.</span></div>
+        <div class="rb"><b>Dr. Henning Brandt · GF Kreiskrankenhaus Musterstadt</b><span class="rq">Lenkungskreis 30 Min. vorziehen? Kreistagsvorsitzender kommt dazu, will Liquiditätszahlen sehen.</span></div>
+        <div class="ra"><button class="btn s" type="button">Antworten</button><a class="btn s" href="#chat">Vorlage</a></div>
+      </div>
+      <div class="rr block">
+        <div class="rh"><span class="chip r">Blocker</span><span class="chip">Outlook</span><span class="muted">07:41</span></div>
+        <div class="rb"><b>Sebastian Fenger · Projektleitung Musterstadt</b><span class="rq">Hebel 1 ohne MVZ-Forderungen – Maßnahmenliste v3 kann so nicht an die GF.</span></div>
+        <div class="ra"><button class="btn s" type="button">MVZ-Daten freigeben</button></div>
+      </div>
+      <div class="rr dl">
+        <div class="rh"><span class="chip o">Deadline</span><span class="chip">Angebote</span><span class="muted">Mo 12:00</span></div>
+        <div class="rb"><b>LOP Kreisklinikum Oberland · Abgabe</b><span class="rq">Entwurf v2 wartet auf Partner-Review: Preisrahmen und Team.</span></div>
+        <div class="ra"><a class="btn s" href="#angebote">Review öffnen</a></div>
+      </div>
+      <div class="rr block">
+        <div class="rh"><span class="chip r">Blocker</span><span class="chip">Teams</span><span class="muted">gestern 17:20</span></div>
+        <div class="rb"><b>Lena Krüger · Consultant Finanzen</b><span class="rq">Kein Zugriff auf 04 Verträge – Chefarztvertrags-Check wartet seit zwei Tagen.</span></div>
+        <div class="ra"><a class="btn s" href="#projekt">Zugriff erteilen</a></div>
+      </div>
+      <div class="rr ext">
+        <div class="rh"><span class="chip o">Extern · Träger</span><span class="chip">Outlook</span><span class="muted">vor 4 Std.</span></div>
+        <div class="rb"><b>Kämmerei Landkreis · Frau Weidner</b><span class="rq">Herleitung Investitionskostenzuschuss § 9 bis Freitag für die Kreistagsvorlage.</span></div>
+        <div class="ra"><button class="btn s" type="button">Antwort aus Datenraum</button></div>
+      </div>
+      <div class="rr dl">
+        <div class="rh"><span class="chip o">Deadline · 30.10.</span><span class="chip">Outlook</span><span class="muted">gestern</span></div>
+        <div class="rb"><b>Landesministerium · Krankenhausplanung</b><span class="rq">KHTF Modul 2 Nordhessen: Nachweise Mindestvorhaltezahlen LG 12 und 19 fehlen.</span></div>
+        <div class="ra"><a class="btn s" href="#agenten">Agent starten</a></div>
+      </div>
+    </div>
+    </div>
+    <div data-god="1" hidden>
+    <div class="god">Alles erledigt.</div>
+    </div>
+  </section>
+
+  <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px">
+    <section class="card" style="display: flex; flex-direction: column">
+      <div style="display: flex; align-items: center; justify-content: space-between; padding: 10px 16px 4px">
+        <h2 style="font-size: 14px">Meine Projekte</h2>
+        <a href="#projekt" style="font-size: 13px; font-weight: 600">Alle 6</a>
+      </div>
+      <div data-god="0">
+      <a class="row" href="#projekt">
+        <div><div style="font-weight: 600">Kreiskrankenhaus Musterstadt</div><div class="muted" style="font-size: 12px">320 Betten · Sanierung · Phase 2 Maßnahmenplanung</div></div>
+        <span class="chip o">Heute 14:00 Lenkungskreis</span>
+      </a>
+      <a class="row" href="#projekt">
+        <div><div style="font-weight: 600">Klinikverbund Nordhessen</div><div class="muted" style="font-size: 12px">3 Standorte · Leistungsgruppen &amp; KHTF-Antrag</div></div>
+        <span class="chip">Modul 2</span>
+      </a>
+      <a class="row" href="#projekt">
+        <div><div style="font-weight: 600">St.-Elisabeth-Stiftung Rhein-Main</div><div class="muted" style="font-size: 12px">Insolvenz in Eigenverwaltung · Externes Management</div></div>
+        <span class="chip">Woche 9</span>
+      </a>
+      <a class="row" href="#projekt">
+        <div><div style="font-weight: 600">MedTech-Due-Diligence „Projekt Falke“</div><div class="muted" style="font-size: 12px">PIPE · Commercial DD · Datenraum 1.240 Dokumente</div></div>
+        <span class="chip">Vertraulich</span>
+      </a>
+      </div>
+      <div data-god="1" hidden>
+      <div class="god" style="flex: 1">Es braucht Dich nicht mehr.</div>
+      </div>
+    </section>
+
+    <section class="card" style="display: flex; flex-direction: column">
+      <div style="display: flex; align-items: center; justify-content: space-between; padding: 10px 16px 4px">
+        <h2 style="font-size: 14px">Letzte Arbeit</h2>
+        <span class="muted" style="font-size: 13px">Heute</span>
+      </div>
+      <a class="row" href="#chat">
+        <div><div style="font-weight: 600">Liquiditätshebel Musterstadt – 12 Monate</div><div class="muted" style="font-size: 12px">Chat · Kreiskrankenhaus Musterstadt · 6 Quellen</div></div>
+        <span class="chip b">Opus 5.5</span>
+      </a>
+      <a class="row" href="#datenmodus">
+        <div><div style="font-weight: 600">§21-Datensatz 2025 – Fallzahl &amp; CMI je Fachabteilung</div><div class="muted" style="font-size: 12px">Analyse · Datenmodus · Tabelle + Chart</div></div>
+        <span class="chip">Datenmodus</span>
+      </a>
+      <a class="row" href="#agenten">
+        <div><div style="font-weight: 600">Managementletter-Entwurf Lenkungskreis</div><div class="muted" style="font-size: 12px">Agent „Managementletter“ · Lauf 07:12 · 3 Min.</div></div>
+        <span class="chip g">Fertig</span>
+      </a>
+      <a class="row" href="#angebote">
+        <div><div style="font-weight: 600">LOP Kreisklinikum Oberland – Entwurf v2</div><div class="muted" style="font-size: 12px">Angebot · 4 Vergleichsprojekte aus dem Gedächtnis</div></div>
+        <span class="chip o">Partner-Review</span>
+      </a>
+    </section>
+  </div>
+
+  <div class="card" style="padding: 8px 16px; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 18px; font-size: 12px">
+    <span><span class="muted" style="font-weight: 600; letter-spacing: .4px">NEU IM GEDÄCHTNIS</span> &nbsp;<b>Strukturgutachten Klinikverbund Ostsee 2026</b> · Referenzwerk · <a href="#gedaechtnis">öffnen</a></span>
+    <span><span class="muted" style="font-weight: 600; letter-spacing: .4px">BIBLIOTHEK</span> &nbsp;<b>Leistungsgruppen-Check v2.1</b> von S. Fenger</span>
+    <span><span class="muted" style="font-weight: 600; letter-spacing: .4px">MEINE AGENTEN</span> &nbsp;<b>9</b> · 3 geteilt</span>
+  </div>
+</main>
+</div>
+</section>
+<section class="screen" id="projekt" hidden>
+<div style="min-height: 100vh; display: flex; flex-wrap: wrap; align-items: stretch">
+
+<aside style="position: relative; width: 248px; flex: 0 0 248px; background: #3C261D; display: flex; flex-direction: column; padding: 24px 16px; box-sizing: border-box; gap: 24px">
+  <div style="padding: 0 8px">
+    <a class="logout-btn" href="#logout" title="Abmelden"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14" aria-hidden="true"><path d="M10 17l5-5-5-5M15 12H3M21 3v18"/></svg>Abmelden</a><div style="font-size: 30px; font-weight: 800; letter-spacing: -1px; color: #fff; line-height: 1">WMC</div>
+    <div style="font-size: 9px; letter-spacing: 3px; color: #C1B2AA; font-weight: 600; margin-top: 2px">HEALTHCARE</div>
+    <div style="margin-top: 14px; display: inline-flex; align-items: center; gap: 8px; color: #EAE4E1; font-size: 12px; font-weight: 600"><span style="width: 8px; height: 8px; border-radius: 50%; background: #D55C05; display: inline-block"></span>Intelligence</div>
+  </div>
+  <nav class="nav" style="display: flex; flex-direction: column; gap: 2px">
+    <a href="#start"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>Start</a>
+    <a class="on" href="#projekt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>Projekte</a>
+    <a href="#chat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 5h16v11H8l-4 4z"/></svg>Chat</a>
+    <a href="#gedaechtnis"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 5a2 2 0 0 1 2-2h5v18H6a2 2 0 0 1-2-2zM13 3h5a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-5zM7 8h2M7 12h2M15 8h2M15 12h2"/></svg>Gedächtnis</a>
+    <a href="#angebote"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 3h9l4 4v14H6zM15 3v4h4M9 12h6M9 16h6"/></svg>Angebote</a>
+    <a href="#agenten"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="4" y="7" width="16" height="12" rx="2"/><path d="M12 3v4M8 12h.01M16 12h.01M9 16h6"/></svg>Agenten</a>
+    <a href="#datenmodus"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-8M22 20H2"/></svg>Datenmodus</a>
+    <a href="#admin"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/></svg>WMC-Admin</a>
+  </nav>
+  <div style="margin-top: auto; padding: 12px; border-radius: 10px; background: rgba(255,255,255,.08); color: #EAE4E1; font-size: 12px">
+    <div style="display: flex; align-items: center; gap: 10px">
+      <span style="width: 32px; height: 32px; border-radius: 50%; background: #C1B2AA; color: #3C261D; display: inline-flex; align-items: center; justify-content: center; font-weight: 700"><span class="u-init">CW</span></span>
+      <div style="min-width: 0"><div style="font-weight: 600; color: #fff"><span class="u-name">Christian Wallwiener</span></div><div><span class="u-role">Geschäftsführer</span></div></div>
+    </div>
+    <div style="margin-top: 10px; display: flex; justify-content: space-between"><span>Modellbudget Oktober</span><span style="font-weight: 600">62 %</span></div>
+    <div style="height: 4px; border-radius: 2px; background: rgba(255,255,255,.15); margin-top: 6px"><div style="width: 62%; height: 4px; border-radius: 2px; background: #D55C05"></div></div>
+    <div style="margin-top: 10px; display: flex; flex-direction: column; gap: 6px">
+      <label for="bud-projekt" style="font-weight: 600; color: #fff">Zusatzbudget anfragen</label>
+      <textarea id="bud-projekt" rows="2" placeholder="Begründung, z. B. Lenkungskreis vorgezogen, zusätzliche Datenraum-Analyse Musterstadt …" style="width: 100%; box-sizing: border-box; font: inherit; font-size: 12px; padding: 8px; border-radius: 8px; border: 1px solid rgba(255,255,255,.25); background: rgba(255,255,255,.06); color: #fff; resize: vertical"></textarea>
+      <div style="display: flex; flex-direction: column; gap: 6px">
+        <label for="budamt-projekt" style="position: absolute; left: -9999px">Betrag</label>
+        <input id="budamt-projekt" type="text" value="+ 500 €" style="width: 100%; font: inherit; font-size: 12px; padding: 8px; border-radius: 8px; border: 1px solid rgba(255,255,255,.25); background: rgba(255,255,255,.06); color: #fff; min-height: 36px; box-sizing: border-box">
+        <button type="button" style="flex: 1; min-height: 36px; border-radius: 8px; border: 0; background: #D55C05; color: #fff; font: inherit; font-size: 12px; font-weight: 600; cursor: pointer">Anfrage an AI-God</button>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<main style="flex: 999 1 560px; min-width: 0; padding: 32px 40px; box-sizing: border-box; display: flex; flex-direction: column; gap: 20px">
+  <div style="display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-between; gap: 16px">
+    <div>
+      <div class="muted" style="font-size: 13px"><a href="#start" style="color: #5E5652; text-decoration: none">Projekte</a> / Kreiskrankenhaus Musterstadt</div>
+      <h1 style="font-size: 22px; letter-spacing: -0.5px; margin-top: 2px">Kreiskrankenhaus Musterstadt</h1>
+      <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px">
+        <span class="chip o">Sanierung &amp; Restrukturierung</span><span class="chip">320 Betten · Kommunal</span><span class="chip">Phase 2 · Maßnahmenplanung</span><span class="chip g">Vertraulichkeit: Projektteam</span>
+      </div>
+    </div>
+    <div style="display: flex; gap: 10px; flex-wrap: wrap">
+      <a class="btn" href="#datenmodus">Datenmodus</a>
+      <a class="btn p" href="#chat">Chat im Projekt</a>
+    </div>
+  </div>
+
+  <div style="display: flex; gap: 4px; flex-wrap: wrap">
+    <a class="tab on" href="#projekt">Übersicht</a>
+    <a class="tab" href="#projekt">Datenraum</a>
+    <a class="tab" href="#chat">Chats</a>
+    <a class="tab" href="#agenten">Agenten</a>
+    <a class="tab" href="#datenmodus">Analysen</a>
+    <a class="tab" href="#admin">Team &amp; Zugriff</a>
+  </div>
+
+  <section class="card" style="padding: 10px 16px 12px; display: flex; flex-direction: column; gap: 8px">
+    <div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap"><h2 style="font-size: 15px">Jetzt wichtig im Projekt</h2><span class="muted" style="font-size: 12px">Kreiskrankenhaus Musterstadt · aus Mail, WhatsApp, Teams und Projektchats</span></div>
+    <div class="rad">
+      <div class="rr ext">
+        <div class="rh"><span class="chip o">Extern · CEO</span><span class="chip">WhatsApp</span><span class="muted">vor 2 Std.</span></div>
+        <div class="rb"><b>Dr. Henning Brandt · GF</b><span class="rq">Lenkungskreis 30 Min. vorziehen? Kreistagsvorsitzender kommt dazu.</span></div>
+        <div class="ra"><button class="btn s" type="button">Antworten</button><a class="btn s" href="#chat">Vorlage</a></div>
+      </div>
+      <div class="rr block">
+        <div class="rh"><span class="chip r">Blocker</span><span class="chip">Outlook</span><span class="muted">07:41</span></div>
+        <div class="rb"><b>Sebastian Fenger · Projektleitung</b><span class="rq">Hebel 1 ohne MVZ-Forderungen – Maßnahmenliste v3 geht so nicht raus.</span></div>
+        <div class="ra"><button class="btn s" type="button">MVZ-Daten freigeben</button></div>
+      </div>
+      <div class="rr block">
+        <div class="rh"><span class="chip r">Blocker</span><span class="chip">Teams</span><span class="muted">gestern 17:20</span></div>
+        <div class="rb"><b>Lena Krüger · Finanzen</b><span class="rq">Kein Zugriff auf 04 Verträge – Chefarztvertrags-Check wartet.</span></div>
+        <div class="ra"><button class="btn s" type="button">Zugriff erteilen</button></div>
+      </div>
+      <div class="rr ext">
+        <div class="rh"><span class="chip o">Extern · Träger</span><span class="chip">Outlook</span><span class="muted">vor 4 Std.</span></div>
+        <div class="rb"><b>Kämmerei Landkreis · Frau Weidner</b><span class="rq">Herleitung Investitionskostenzuschuss § 9 bis Freitag.</span></div>
+        <div class="ra"><button class="btn s" type="button">Antwort aus Datenraum</button></div>
+      </div>
+    </div>
+  </section>
+
+  <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px">
+    <section class="card" style="grid-column: span 2; display: flex; flex-direction: column">
+      <div style="display: flex; align-items: center; justify-content: space-between; padding: 16px 18px 8px">
+        <h2 style="font-size: 16px">Datenraum</h2>
+        <div style="display: flex; gap: 8px; align-items: center"><span class="chip">SharePoint</span><span class="chip">Drooms (lesend)</span><span class="chip">Outlook</span><span class="muted" style="font-size: 12px">214 Dok. · 1,8 GB · indexiert</span><button class="btn" style="min-height: 36px; padding: 6px 12px" type="button">Hochladen</button></div>
+      </div>
+      <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px; padding: 6px 10px 14px">
+        <a class="folder" href="#projekt"><svg viewBox="0 0 24 24" fill="none" stroke="#D55C05" stroke-width="2" width="18" height="18" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg><span style="flex: 1">01 Finanzen · Jahresabschlüsse 2022–2025</span><span class="muted" style="font-size: 12px">31</span></a>
+        <a class="folder" href="#projekt"><svg viewBox="0 0 24 24" fill="none" stroke="#D55C05" stroke-width="2" width="18" height="18" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg><span style="flex: 1">02 Leistungsdaten · §21, InEK-Browser</span><span class="muted" style="font-size: 12px">18</span></a>
+        <a class="folder" href="#projekt"><svg viewBox="0 0 24 24" fill="none" stroke="#D55C05" stroke-width="2" width="18" height="18" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg><span style="flex: 1">03 Personal · Stellenpläne, PPR 2.0</span><span class="muted" style="font-size: 12px">42</span></a>
+        <a class="folder" href="#projekt"><svg viewBox="0 0 24 24" fill="none" stroke="#D55C05" stroke-width="2" width="18" height="18" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg><span style="flex: 1">04 Verträge · Chefärzte, Dienstleister, Mieten</span><span class="muted" style="font-size: 12px">57</span></a>
+        <a class="folder" href="#projekt"><svg viewBox="0 0 24 24" fill="none" stroke="#D55C05" stroke-width="2" width="18" height="18" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg><span style="flex: 1">05 Interviews · Transkripte &amp; Protokolle</span><span class="muted" style="font-size: 12px">39</span></a>
+        <a class="folder" href="#projekt"><svg viewBox="0 0 24 24" fill="none" stroke="#D55C05" stroke-width="2" width="18" height="18" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg><span style="flex: 1">06 Deliverables · Berichte &amp; Gremienvorlagen</span><span class="muted" style="font-size: 12px">27</span></a>
+      </div>
+          </section>
+
+    <section class="card" style="display: flex; flex-direction: column">
+      <div style="padding: 10px 14px 4px"><h2 style="font-size: 14px">Projektteam</h2></div>
+      <div style="padding: 0 18px 14px; display: flex; flex-direction: column; gap: 10px">
+        <div style="display: flex; align-items: center; gap: 8px; font-size: 12px"><span style="width: 22px; height: 22px; border-radius: 50%; background: #3C261D; color: #fff; display: inline-flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; flex: none">CW</span><b>C. Wallwiener</b><span class="muted">· Geschäftsführer · Lead</span></div>
+        <div style="display: flex; align-items: center; gap: 8px; font-size: 12px"><span style="width: 22px; height: 22px; border-radius: 50%; background: #C1B2AA; color: #3C261D; display: inline-flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; flex: none">SF</span><b>S. Fenger</b><span class="muted">· Projektleitung</span></div>
+        <div style="display: flex; align-items: center; gap: 8px; font-size: 12px"><span style="width: 22px; height: 22px; border-radius: 50%; background: #C1B2AA; color: #3C261D; display: inline-flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; flex: none">PW</span><b>P. Werber</b><span class="muted">· Medizincontrolling</span></div>
+        <div style="display: flex; align-items: center; gap: 8px; font-size: 12px"><span style="width: 22px; height: 22px; border-radius: 50%; background: #C1B2AA; color: #3C261D; display: inline-flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; flex: none">LK</span><b>L. Krüger</b><span class="muted">· Consultant · Finanzen</span></div>
+      </div>
+      <div style="border-top: 1px solid #EFEAE7; padding: 12px 18px; font-size: 12px" class="muted">Zugriff nur für das Projektteam. Andere WMC-Berater sehen dieses Projekt nicht (<a href="#admin">Richtlinie</a>).</div>
+    </section>
+  </div>
+
+  <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px">
+    <section class="card" style="display: flex; flex-direction: column">
+      <div style="display: flex; align-items: center; justify-content: space-between; padding: 16px 18px 8px"><h2 style="font-size: 16px">Projektanweisungen</h2><span class="chip">gilt für alle Chats &amp; Agenten</span></div>
+      <div style="padding: 0 18px 16px; font-size: 13px; line-height: 1.55">Kommunaler Träger, Landkreis als Gesellschafter. Zielbild: nachhaltig positives EBITDA ab 2028, Erhalt der Grund- und Regelversorgung, Notaufnahme bleibt. Terminologie: „Sanierungsprogramm“, nicht „Sparprogramm“. Zahlen immer mit Quelle und Stand; Jahresabschluss 2025 ist vorläufig. Maßnahmen in WMC-Logik über Ergebnistreiber ausweisen (Erlös, Sachkosten, Personal, Struktur).</div>
+    </section>
+    <section class="card" style="grid-column: span 2; display: flex; flex-direction: column">
+      <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 14px 4px; flex-wrap: wrap">
+        <div style="display: flex; align-items: baseline; gap: 8px"><h2 style="font-size: 14px">Aufgaben im Projekt</h2><span class="muted" style="font-size: 11px">automatisch aus Transkripten, Protokollen und Chats – nicht händisch gepflegt</span></div>
+        <div style="display: flex; gap: 4px"><span class="tab on" style="min-height: 28px; padding: 3px 10px; font-size: 12px">Meine (3)</span><span class="tab" style="min-height: 28px; padding: 3px 10px; font-size: 12px">Team (9)</span><span class="tab" style="min-height: 28px; padding: 3px 10px; font-size: 12px">Erledigt (14)</span></div>
+      </div>
+      <div class="td"><input id="p1-projekt" type="checkbox"><label for="p1-projekt"><b>Maßnahmenliste v3 an GF freigeben</b><span class="td-m"><span class="chip r">morgen 12:00</span><span>Beschluss Lenkungskreis 17.10. · <a href="#projekt">Protokoll S. 3</a></span></span></label><span class="av">CW</span></div>
+      <div class="td"><input id="p2-projekt" type="checkbox"><label for="p2-projekt"><b>MVZ-Reporting in Datenraum 01 freigeben</b><span class="td-m"><span class="chip o">heute</span><span>Teamnachfrage S. Fenger · <a href="#chat">Chat-Kommentar 07:41</a></span></span></label><span class="av">CW</span></div>
+      <div class="td"><input id="p3-projekt" type="checkbox"><label for="p3-projekt"><b>Zugriff 04 Verträge für L. Krüger erteilen</b><span class="td-m"><span class="chip o">heute</span><span>Blocker Agent Chefarztvertrags-Check · Teams</span></span></label><span class="av">CW</span></div>
+      <div class="td"><input id="p4-projekt" type="checkbox"><label for="p4-projekt"><b>Zahlungsziele mit Einkaufsgemeinschaft verhandeln</b><span class="td-m"><span class="chip">Do 11:00</span><span>Hebel 2 · aus <a href="#chat">Chat Liquiditätshebel</a></span></span></label><span class="av t">LK</span></div>
+      <div class="td"><input id="p5-projekt" type="checkbox"><label for="p5-projekt"><b>Dienstplanmodell Pflege mit Pflegedirektion abstimmen</b><span class="td-m"><span class="chip">Fr</span><span>aus <a href="#chat">Transkript Interview Pflegedirektion</a> 12:34 · „bis Ende nächster Woche“</span></span></label><span class="av t">SF</span></div>
+    </section>
+  </div>
+</main>
+</div>
+</section>
+<section class="screen" id="chat" hidden>
+<div style="min-height: 100vh; display: flex; flex-wrap: wrap; align-items: stretch">
+
+<aside style="position: relative; width: 248px; flex: 0 0 248px; background: #3C261D; display: flex; flex-direction: column; padding: 24px 16px; box-sizing: border-box; gap: 24px">
+  <div style="padding: 0 8px">
+    <a class="logout-btn" href="#logout" title="Abmelden"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14" aria-hidden="true"><path d="M10 17l5-5-5-5M15 12H3M21 3v18"/></svg>Abmelden</a><div style="font-size: 30px; font-weight: 800; letter-spacing: -1px; color: #fff; line-height: 1">WMC</div>
+    <div style="font-size: 9px; letter-spacing: 3px; color: #C1B2AA; font-weight: 600; margin-top: 2px">HEALTHCARE</div>
+    <div style="margin-top: 14px; display: inline-flex; align-items: center; gap: 8px; color: #EAE4E1; font-size: 12px; font-weight: 600"><span style="width: 8px; height: 8px; border-radius: 50%; background: #D55C05; display: inline-block"></span>Intelligence</div>
+  </div>
+  <nav class="nav" style="display: flex; flex-direction: column; gap: 2px">
+    <a href="#start"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>Start</a>
+    <a href="#projekt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>Projekte</a>
+    <a class="on" href="#chat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 5h16v11H8l-4 4z"/></svg>Chat</a>
+    <a href="#gedaechtnis"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 5a2 2 0 0 1 2-2h5v18H6a2 2 0 0 1-2-2zM13 3h5a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-5zM7 8h2M7 12h2M15 8h2M15 12h2"/></svg>Gedächtnis</a>
+    <a href="#angebote"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 3h9l4 4v14H6zM15 3v4h4M9 12h6M9 16h6"/></svg>Angebote</a>
+    <a href="#agenten"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="4" y="7" width="16" height="12" rx="2"/><path d="M12 3v4M8 12h.01M16 12h.01M9 16h6"/></svg>Agenten</a>
+    <a href="#datenmodus"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-8M22 20H2"/></svg>Datenmodus</a>
+    <a href="#admin"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/></svg>WMC-Admin</a>
+  </nav>
+  <div style="margin-top: auto; padding: 12px; border-radius: 10px; background: rgba(255,255,255,.08); color: #EAE4E1; font-size: 12px">
+    <div style="display: flex; align-items: center; gap: 10px">
+      <span style="width: 32px; height: 32px; border-radius: 50%; background: #C1B2AA; color: #3C261D; display: inline-flex; align-items: center; justify-content: center; font-weight: 700"><span class="u-init">CW</span></span>
+      <div style="min-width: 0"><div style="font-weight: 600; color: #fff"><span class="u-name">Christian Wallwiener</span></div><div><span class="u-role">Geschäftsführer</span></div></div>
+    </div>
+    <div style="margin-top: 10px; display: flex; justify-content: space-between"><span>Modellbudget Oktober</span><span style="font-weight: 600">62 %</span></div>
+    <div style="height: 4px; border-radius: 2px; background: rgba(255,255,255,.15); margin-top: 6px"><div style="width: 62%; height: 4px; border-radius: 2px; background: #D55C05"></div></div>
+    <div style="margin-top: 10px; display: flex; flex-direction: column; gap: 6px">
+      <label for="bud-chat" style="font-weight: 600; color: #fff">Zusatzbudget anfragen</label>
+      <textarea id="bud-chat" rows="2" placeholder="Begründung, z. B. Lenkungskreis vorgezogen, zusätzliche Datenraum-Analyse Musterstadt …" style="width: 100%; box-sizing: border-box; font: inherit; font-size: 12px; padding: 8px; border-radius: 8px; border: 1px solid rgba(255,255,255,.25); background: rgba(255,255,255,.06); color: #fff; resize: vertical"></textarea>
+      <div style="display: flex; flex-direction: column; gap: 6px">
+        <label for="budamt-chat" style="position: absolute; left: -9999px">Betrag</label>
+        <input id="budamt-chat" type="text" value="+ 500 €" style="width: 100%; font: inherit; font-size: 12px; padding: 8px; border-radius: 8px; border: 1px solid rgba(255,255,255,.25); background: rgba(255,255,255,.06); color: #fff; min-height: 36px; box-sizing: border-box">
+        <button type="button" style="flex: 1; min-height: 36px; border-radius: 8px; border: 0; background: #D55C05; color: #fff; font: inherit; font-size: 12px; font-weight: 600; cursor: pointer">Anfrage an AI-God</button>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<main style="flex: 999 1 560px; min-width: 0; display: flex; flex-wrap: wrap; align-items: stretch">
+  <section style="flex: 999 1 520px; min-width: 0; display: flex; flex-direction: column; padding: 24px 32px; box-sizing: border-box; gap: 16px">
+    <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px">
+      <div>
+        <div class="muted" style="font-size: 12px"><a href="#projekt" style="color: #5E5652; text-decoration: none">Kreiskrankenhaus Musterstadt</a> · Chat</div>
+        <h1 style="font-size: 18px">Liquiditätshebel 12 Monate</h1>
+      </div>
+      <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center">
+        <span class="chip b">Claude Opus 5.5</span><span class="chip">Reasoning: Tief</span><span class="chip g">EU · Zero Data Retention</span>
+        <button class="btn s" type="button">Teilen</button>
+      </div>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 16px; flex: 1">
+      <div style="align-self: flex-end; max-width: 72%; background: #EAE4E1; border-radius: 14px 14px 4px 14px; padding: 12px 16px">
+        Welche Hebel verbessern die Liquidität des Kreiskrankenhauses in den nächsten 12 Monaten? Priorisiere nach Wirkung und Umsetzbarkeit, nutze Jahresabschluss 2025 und die Zahlungsziel-Auswertung. Ich brauche das als Vorlage für den Lenkungskreis heute 14:00.
+      </div>
+
+      <div class="card" style="padding: 20px 22px; display: flex; flex-direction: column; gap: 12px">
+        <div style="display: flex; align-items: center; gap: 10px; font-size: 12px" class="muted">
+          <span style="width: 22px; height: 22px; border-radius: 6px; background: #3C261D; display: inline-flex; align-items: center; justify-content: center"><span style="width: 8px; height: 8px; border-radius: 50%; background: #D55C05"></span></span>
+          <span><b style="color: #1C2024">WMC Intelligence</b> · Claude Opus 5.5 · Reasoning tief · 41 s · 6 Dokumente gelesen, 23 Seiten zitiert</span>
+        </div>
+        <h2 style="font-size: 15px">Drei Hebel mit Liquiditätswirkung innerhalb von 12 Monaten</h2>
+        <div style="display: flex; flex-direction: column; gap: 6px; font-size: 13px">
+          <div style="display: flex; gap: 12px"><span class="chip o" style="height: 22px">1</span><div><b>Forderungsmanagement &amp; Abrechnungsgeschwindigkeit.</b> Durchschnittliche Zeit bis Rechnungsstellung liegt bei 18,4 Tagen nach Entlassung <a class="src" href="#chat">Zahlungsziel-Auswertung 2025 · S. 3</a>; der Forderungsbestand &gt; 90 Tage ist gegenüber 2024 um 2,1 Mio. € gestiegen <a class="src" href="#chat">JA 2025 (vorl.) · S. 14</a>. Zielwert 7 Tage, MD-Rückfragen taggleich beantworten – so umgesetzt im Sanierungsprogramm KH Westfalen <a class="src" href="#gedaechtnis" style="background: #E3EAF6; color: #24467C">WMC-Gedächtnis · Sanierungskonzept KH Westfalen 2024 · S. 12</a>. <b>Wirkung: ca. 3,0–3,5 Mio. € einmaliger Liquiditätseffekt.</b> Umsetzbarkeit hoch, kein Gremienbeschluss nötig.</div></div>
+          <div style="display: flex; gap: 12px"><span class="chip o" style="height: 22px">2</span><div><b>Zahlungsziele und Bestände.</b> Kreditorenlaufzeit 24 Tage bei branchenüblichen 45 <a class="src" href="#chat">JA 2025 (vorl.) · S. 19</a>; Vorräte Arzneimittel/Medikalprodukte 2,9 Mio. € bei 41 Tagen Reichweite <a class="src" href="#chat">Inventur 31.12.2025 · S. 2</a>. Zielwerte 40 Tage bzw. 25 Tage Reichweite. <b>Wirkung: ca. 1,8–2,2 Mio. €.</b> Umsetzbarkeit mittel (Lieferantenverhandlung über Einkaufsgemeinschaft).</div></div>
+          <div style="display: flex; gap: 12px"><span class="chip o" style="height: 22px">3</span><div><b>Erlössicherung und Zuschüsse.</b> Offene Budgetverhandlung 2025 mit ungeklärtem Ausgleich 1,4 Mio. € <a class="src" href="#chat">Protokoll Budgetverhandlung 03/2026 · S. 6</a>; Investitionskostenzuschuss des Landkreises per Gesellschafterbeschluss vorziehbar <a class="src" href="#chat">Gesellschaftsvertrag · § 9</a>. <b>Wirkung: bis 2,5 Mio. €,</b> Umsetzbarkeit abhängig von Kreistag (Sitzung 12.11.).</div></div>
+        </div>
+        <div style="padding: 6px 10px; border-radius: 8px; background: #FBF9F8; font-size: 12px"><b>Hinweis zur Belastbarkeit:</b> Jahresabschluss 2025 ist vorläufig (Projektanweisung). Zahlungsziel-Auswertung deckt nur stationäre Fälle ab; ambulante Forderungen sind nicht enthalten.</div>
+        <div style="display: flex; flex-wrap: wrap; gap: 8px; border-top: 1px solid #EFEAE7; padding-top: 12px">
+          <button class="btn s p" type="button">In Bericht übernehmen</button>
+          <button class="btn s" type="button">Gremienvorlage (PPT)</button>
+          <button class="btn s" type="button">Word</button>
+          <button class="btn s" type="button">Kopieren</button>
+          <button class="btn s" type="button">Gegenprüfen (Sonnet)</button>
+          <button class="btn s" type="button">Erneut generieren</button>
+          <span style="flex: 1"></span>
+          <button class="btn s" type="button" aria-label="Kommentar hinzufügen">Kommentar</button>
+        </div>
+        <div class="cmt"><b>S. Fenger</b> · 07:41 — Hebel 1: Bitte Zahl für ambulante Forderungen aus dem MVZ-Reporting nachziehen, sonst unterschätzen wir.</div>
+      </div>
+    </div>
+
+    <div class="card" style="padding: 12px 16px; display: flex; flex-direction: column; gap: 10px">
+      <label for="msg-chat" style="position: absolute; left: -9999px">Nachricht</label>
+      <input id="msg-chat" type="text" placeholder="Nachfrage stellen – Quellen aus dem Datenraum werden automatisch herangezogen …" style="border: 0; font: inherit; font-size: 14px; outline: none; min-width: 0">
+      <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 8px">
+        <button class="btn s" type="button">Datei</button>
+        <button class="btn s" type="button">Datenraum: 02 Leistungsdaten</button>
+        <button class="btn s" type="button">WMC-Gedächtnis</button>
+        <button class="btn s" type="button">Websuche</button>
+        <button class="btn s" type="button">Agent aufrufen</button>
+        <span style="flex: 1"></span>
+        <select aria-label="Modell" style="font: inherit; font-size: 13px; padding: 8px 10px; border-radius: 8px; border: 1px solid #C1B2AA; background: #fff; min-height: 36px"><option>Claude Opus 5.5</option><option>Claude Sonnet 5.5</option><option>GPT-5</option><option>Gemini Pro</option></select>
+        <select aria-label="Reasoning" style="font: inherit; font-size: 13px; padding: 8px 10px; border-radius: 8px; border: 1px solid #C1B2AA; background: #fff; min-height: 36px"><option>Reasoning: Tief</option><option>Reasoning: Standard</option><option>Reasoning: Schnell</option></select>
+        <button class="btn p s" type="button">Senden</button>
+      </div>
+    </div>
+  </section>
+
+  <aside style="flex: 1 1 300px; max-width: 340px; border-left: 1px solid #E6DFDB; background: #fff; padding: 24px 20px; box-sizing: border-box; display: flex; flex-direction: column; gap: 16px">
+    <div style="display: flex; align-items: center; justify-content: space-between"><h2 style="font-size: 14px">Quellen dieser Antwort</h2><span class="chip">7</span></div>
+    <div style="display: flex; flex-direction: column">
+      <a class="srcrow" href="#projekt"><span class="chip o">1</span><div><div style="font-weight: 600; font-size: 13px">Zahlungsziel-Auswertung 2025.xlsx</div><div class="muted" style="font-size: 12px">S. 3 · 01 Finanzen · Stand 02/2026</div></div></a>
+      <a class="srcrow" href="#projekt"><span class="chip o">2</span><div><div style="font-weight: 600; font-size: 13px">Jahresabschluss 2025 (vorläufig).pdf</div><div class="muted" style="font-size: 12px">S. 14, 19 · 01 Finanzen · vorläufig</div></div></a>
+      <a class="srcrow" href="#projekt"><span class="chip o">3</span><div><div style="font-weight: 600; font-size: 13px">Inventur 31.12.2025.pdf</div><div class="muted" style="font-size: 12px">S. 2 · 01 Finanzen</div></div></a>
+      <a class="srcrow" href="#projekt"><span class="chip o">4</span><div><div style="font-weight: 600; font-size: 13px">Protokoll Budgetverhandlung 03-2026.docx</div><div class="muted" style="font-size: 12px">S. 6 · 05 Interviews &amp; Protokolle</div></div></a>
+      <a class="srcrow" href="#projekt"><span class="chip o">5</span><div><div style="font-weight: 600; font-size: 13px">Gesellschaftsvertrag KKH Musterstadt.pdf</div><div class="muted" style="font-size: 12px">§ 9 · 04 Verträge</div></div></a>
+      <a class="srcrow" href="#projekt"><span class="chip o">6</span><div><div style="font-weight: 600; font-size: 13px">WMC-Benchmark Kreditorenlaufzeit</div><div class="muted" style="font-size: 12px">interne Benchmark-DB · 48 Häuser 200–400 Betten</div></div></a>
+      <a class="srcrow" href="#gedaechtnis"><span class="chip b">7</span><div><div style="font-weight: 600; font-size: 13px">Sanierungskonzept KH Westfalen 2024</div><div class="muted" style="font-size: 12px">S. 12 · WMC-Gedächtnis · Referenzwerk · anonymisiert</div></div></a>
+    </div>
+    <div style="border-top: 1px solid #EFEAE7; padding-top: 14px; display: flex; flex-direction: column; gap: 8px">
+      <h2 style="font-size: 14px">Nachvollziehbarkeit</h2>
+      <div style="font-size: 12px" class="muted">Modell: Claude Opus 5.5 · Reasoning: Tief · Kontext: 6 Projektdokumente + 1 Werk aus dem Gedächtnis, 196 Seiten · Verarbeitung: EU-Endpunkt, keine Speicherung beim Anbieter · Protokolliert im Audit-Log (<a href="#admin">#A-20261024-0712</a>)</div>
+    </div>
+  </aside>
+</main>
+</div>
+</section>
+<section class="screen" id="gedaechtnis" hidden>
+<div style="min-height: 100vh; display: flex; flex-wrap: wrap; align-items: stretch">
+
+<aside style="position: relative; width: 248px; flex: 0 0 248px; background: #3C261D; display: flex; flex-direction: column; padding: 24px 16px; box-sizing: border-box; gap: 24px">
+  <div style="padding: 0 8px">
+    <a class="logout-btn" href="#logout" title="Abmelden"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14" aria-hidden="true"><path d="M10 17l5-5-5-5M15 12H3M21 3v18"/></svg>Abmelden</a><div style="font-size: 30px; font-weight: 800; letter-spacing: -1px; color: #fff; line-height: 1">WMC</div>
+    <div style="font-size: 9px; letter-spacing: 3px; color: #C1B2AA; font-weight: 600; margin-top: 2px">HEALTHCARE</div>
+    <div style="margin-top: 14px; display: inline-flex; align-items: center; gap: 8px; color: #EAE4E1; font-size: 12px; font-weight: 600"><span style="width: 8px; height: 8px; border-radius: 50%; background: #D55C05; display: inline-block"></span>Intelligence</div>
+  </div>
+  <nav class="nav" style="display: flex; flex-direction: column; gap: 2px">
+    <a href="#start"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>Start</a>
+    <a href="#projekt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>Projekte</a>
+    <a href="#chat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 5h16v11H8l-4 4z"/></svg>Chat</a>
+    <a class="on" href="#gedaechtnis"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 5a2 2 0 0 1 2-2h5v18H6a2 2 0 0 1-2-2zM13 3h5a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-5zM7 8h2M7 12h2M15 8h2M15 12h2"/></svg>Gedächtnis</a>
+    <a href="#angebote"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 3h9l4 4v14H6zM15 3v4h4M9 12h6M9 16h6"/></svg>Angebote</a>
+    <a href="#agenten"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="4" y="7" width="16" height="12" rx="2"/><path d="M12 3v4M8 12h.01M16 12h.01M9 16h6"/></svg>Agenten</a>
+    <a href="#datenmodus"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-8M22 20H2"/></svg>Datenmodus</a>
+    <a href="#admin"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/></svg>WMC-Admin</a>
+  </nav>
+  <div style="margin-top: auto; padding: 12px; border-radius: 10px; background: rgba(255,255,255,.08); color: #EAE4E1; font-size: 12px">
+    <div style="display: flex; align-items: center; gap: 10px">
+      <span style="width: 32px; height: 32px; border-radius: 50%; background: #C1B2AA; color: #3C261D; display: inline-flex; align-items: center; justify-content: center; font-weight: 700"><span class="u-init">CW</span></span>
+      <div style="min-width: 0"><div style="font-weight: 600; color: #fff"><span class="u-name">Christian Wallwiener</span></div><div><span class="u-role">Geschäftsführer</span></div></div>
+    </div>
+    <div style="margin-top: 10px; display: flex; justify-content: space-between"><span>Modellbudget Oktober</span><span style="font-weight: 600">62 %</span></div>
+    <div style="height: 4px; border-radius: 2px; background: rgba(255,255,255,.15); margin-top: 6px"><div style="width: 62%; height: 4px; border-radius: 2px; background: #D55C05"></div></div>
+    <div style="margin-top: 10px; display: flex; flex-direction: column; gap: 6px">
+      <label for="bud-gedaechtnis" style="font-weight: 600; color: #fff">Zusatzbudget anfragen</label>
+      <textarea id="bud-gedaechtnis" rows="2" placeholder="Begründung, z. B. Lenkungskreis vorgezogen, zusätzliche Datenraum-Analyse Musterstadt …" style="width: 100%; box-sizing: border-box; font: inherit; font-size: 12px; padding: 8px; border-radius: 8px; border: 1px solid rgba(255,255,255,.25); background: rgba(255,255,255,.06); color: #fff; resize: vertical"></textarea>
+      <div style="display: flex; flex-direction: column; gap: 6px">
+        <label for="budamt-gedaechtnis" style="position: absolute; left: -9999px">Betrag</label>
+        <input id="budamt-gedaechtnis" type="text" value="+ 500 €" style="width: 100%; font: inherit; font-size: 12px; padding: 8px; border-radius: 8px; border: 1px solid rgba(255,255,255,.25); background: rgba(255,255,255,.06); color: #fff; min-height: 36px; box-sizing: border-box">
+        <button type="button" style="flex: 1; min-height: 36px; border-radius: 8px; border: 0; background: #D55C05; color: #fff; font: inherit; font-size: 12px; font-weight: 600; cursor: pointer">Anfrage an AI-God</button>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<main style="flex: 999 1 560px; min-width: 0; padding: 28px 40px; box-sizing: border-box; display: flex; flex-direction: column; gap: 18px">
+  <div style="display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 16px">
+    <div>
+      <h1 style="font-size: 24px; letter-spacing: -0.4px">WMC-Gedächtnis</h1>
+      <div class="muted" style="margin-top: 2px; font-size: 13px">Die kuratierten besten Werke von WMC – Recherchequelle für Berater, Wissensbasis für Agenten und Angebote. 612 Werke · 19 Kuratoren · seit 2007.</div>
+    </div>
+    <div style="display: flex; gap: 8px; flex-wrap: wrap"><button class="btn s" type="button">Werk vorschlagen</button><a class="btn s p" href="#angebote">Angebot aus dem Gedächtnis</a></div>
+  </div>
+
+  <div class="card" style="padding: 14px 18px; display: flex; flex-direction: column; gap: 12px; border-color: #D55C05">
+    <div style="display: flex; gap: 12px; align-items: center">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#D55C05" stroke-width="2" width="22" height="22" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+      <label for="gq-gedaechtnis" style="position: absolute; left: -9999px">Gedächtnis fragen</label>
+      <input id="gq-gedaechtnis" type="text" value="Wie haben wir in Sanierungen bei kommunalen Häusern die Notaufnahme wirtschaftlich stabilisiert?" style="flex: 1; border: 0; font: inherit; font-size: 15px; outline: none; min-width: 0">
+      <span class="chip b">Opus 5.5</span>
+    </div>
+    <div style="display: grid; grid-template-columns: 1.4fr 1fr; gap: 18px; border-top: 1px solid #EFEAE7; padding-top: 12px">
+      <div style="font-size: 13px; line-height: 1.55">In vier Referenzwerken seit 2021 folgt die Stabilisierung demselben Muster: <b>Ersteinschätzung und Triage verbindlich</b> (Manchester-Triage mit Personalbindung, KH Westfalen 2024 <a class="src" href="#gedaechtnis">S. 12</a>), <b>Abrechnungs- und Kodierqualität der ambulanten Notfälle</b> als erster Erlöshebel (durchschnittlich +0,4 Mio. € p.a. bei 25.000 Kontakten, Klinikum Südpfalz 2022 <a class="src" href="#gedaechtnis">S. 31</a>), <b>Aufnahmestation/Clinical Decision Unit</b> zur Entkopplung von der Bettenlogistik (WMC EMERGENCY-Konzept 2023 <a class="src" href="#gedaechtnis">S. 8</a>) und <b>Integration des KV-Notdienstes</b> als Portalpraxis (Kreisklinik Allgäu 2025 <a class="src" href="#gedaechtnis">S. 19</a>). In drei von vier Fällen war die Personalbindung in der Triage der kritische Pfad.</div>
+      <div style="display: flex; flex-direction: column; gap: 6px; font-size: 12px">
+        <div class="muted" style="font-weight: 600">Herangezogene Werke</div>
+        <a href="#gedaechtnis" style="color: #1C2024; text-decoration: none"><b>Sanierungskonzept KH Westfalen 2024</b> · Referenzwerk</a>
+        <a href="#gedaechtnis" style="color: #1C2024; text-decoration: none"><b>Strukturgutachten Klinikum Südpfalz 2022</b> · Referenzwerk</a>
+        <a href="#gedaechtnis" style="color: #1C2024; text-decoration: none"><b>WMC EMERGENCY Konzeptpapier 2023</b> · Referenzwerk</a>
+        <a href="#gedaechtnis" style="color: #1C2024; text-decoration: none"><b>Maßnahmenplan Kreisklinik Allgäu 2025</b> · freigegeben</a>
+        <div style="display: flex; gap: 6px; margin-top: 4px"><a class="btn s" href="#chat">Im Projekt-Chat weiterarbeiten</a><button class="btn s" type="button">Kopieren</button></div>
+      </div>
+    </div>
+  </div>
+
+  <div style="display: flex; gap: 4px; flex-wrap: wrap; align-items: center">
+    <a class="tab on" href="#gedaechtnis">Alle Werke</a><a class="tab" href="#gedaechtnis">Referenzwerke (84)</a><a class="tab" href="#gedaechtnis">Angebote &amp; LOPs (137)</a><a class="tab" href="#gedaechtnis">Gutachten (96)</a><a class="tab" href="#gedaechtnis">Methoden &amp; Tools (41)</a><a class="tab" href="#gedaechtnis">Gremienvorlagen (118)</a>
+    <span style="flex: 1"></span>
+    <span class="chip">Leistungsbereich: Alle</span><span class="chip">Sortierung: Wiederverwendung</span>
+  </div>
+
+  <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px">
+    <a class="w" href="#gedaechtnis">
+      <span class="lvl" style="color: #9A4204"><i style="background: #D55C05"></i>Referenzwerk</span>
+      <h3>Sanierungskonzept KH Westfalen 2024</h3>
+      <div class="muted" style="font-size: 12px">Sanierung · 380 Betten · kommunal · 142 Seiten</div>
+      <div style="font-size: 12px">Vollständiges Sanierungskonzept mit Ergebnistreiberbaum, 61 Maßnahmen, Umsetzungsplan 24 Monate.</div>
+      <div style="display: flex; justify-content: space-between; font-size: 12px; margin-top: auto"><span class="muted">Kurator P. Werber</span><span><b>118×</b> genutzt</span></div>
+    </a>
+    <a class="w" href="#gedaechtnis">
+      <span class="lvl" style="color: #9A4204"><i style="background: #D55C05"></i>Referenzwerk</span>
+      <h3>LOP Strukturgutachten Klinikverbund Ostsee 2026</h3>
+      <div class="muted" style="font-size: 12px">Angebot · 3 Standorte · Trägerwechsel · 38 Seiten</div>
+      <div style="font-size: 12px">Angebotsstruktur mit Phasenplan, Teamaufstellung, Preislogik nach Modulen; gewonnen.</div>
+      <div style="display: flex; justify-content: space-between; font-size: 12px; margin-top: auto"><span class="muted">Kurator C. Wallwiener</span><span><b>94×</b> genutzt</span></div>
+    </a>
+    <a class="w" href="#gedaechtnis">
+      <span class="lvl" style="color: #9A4204"><i style="background: #D55C05"></i>Referenzwerk</span>
+      <h3>WMC EMERGENCY Konzeptpapier 2023</h3>
+      <div class="muted" style="font-size: 12px">Methode · Notaufnahme · 54 Seiten</div>
+      <div style="font-size: 12px">Organisations- und Wirtschaftlichkeitsmodell für Zentrale Notaufnahmen inkl. Kennzahlenset.</div>
+      <div style="display: flex; justify-content: space-between; font-size: 12px; margin-top: auto"><span class="muted">Kurator T. Flasbeck</span><span><b>87×</b> genutzt</span></div>
+    </a>
+    <a class="w" href="#gedaechtnis">
+      <span class="lvl" style="color: #1E6B3A"><i style="background: #1E6B3A"></i>Freigegeben</span>
+      <h3>KHTF-Antrag Modul 2 – Musterstruktur 2025</h3>
+      <div class="muted" style="font-size: 12px">KHVVG &amp; KHTF · Landesebene · 71 Seiten</div>
+      <div style="font-size: 12px">Antragsgliederung, Nachweislogik und Förderkriterien-Mapping; zwei Länder abgedeckt.</div>
+      <div style="display: flex; justify-content: space-between; font-size: 12px; margin-top: auto"><span class="muted">Kurator S. Fenger</span><span><b>76×</b> genutzt</span></div>
+    </a>
+  </div>
+
+  <div class="card" style="padding: 12px 18px; display: flex; flex-wrap: wrap; gap: 14px; align-items: center; font-size: 12px">
+    <b>Governance:</b><span>Nur anonymisierte, von einem Partner freigegebene Werke gelangen ins Gedächtnis.</span><span>Projektdaten der Mandanten bleiben im Projekt und werden nie hierher übernommen.</span><span>Jede Nutzung wird dem Werk zugerechnet (Kurator-Score).</span><a href="#admin">Kuratierungsregeln</a>
+  </div>
+</main>
+</div>
+</section>
+<section class="screen" id="angebote" hidden>
+<div style="min-height: 100vh; display: flex; flex-wrap: wrap; align-items: stretch">
+
+<aside style="position: relative; width: 248px; flex: 0 0 248px; background: #3C261D; display: flex; flex-direction: column; padding: 24px 16px; box-sizing: border-box; gap: 24px">
+  <div style="padding: 0 8px">
+    <a class="logout-btn" href="#logout" title="Abmelden"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14" aria-hidden="true"><path d="M10 17l5-5-5-5M15 12H3M21 3v18"/></svg>Abmelden</a><div style="font-size: 30px; font-weight: 800; letter-spacing: -1px; color: #fff; line-height: 1">WMC</div>
+    <div style="font-size: 9px; letter-spacing: 3px; color: #C1B2AA; font-weight: 600; margin-top: 2px">HEALTHCARE</div>
+    <div style="margin-top: 14px; display: inline-flex; align-items: center; gap: 8px; color: #EAE4E1; font-size: 12px; font-weight: 600"><span style="width: 8px; height: 8px; border-radius: 50%; background: #D55C05; display: inline-block"></span>Intelligence</div>
+  </div>
+  <nav class="nav" style="display: flex; flex-direction: column; gap: 2px">
+    <a href="#start"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>Start</a>
+    <a href="#projekt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>Projekte</a>
+    <a href="#chat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 5h16v11H8l-4 4z"/></svg>Chat</a>
+    <a href="#gedaechtnis"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 5a2 2 0 0 1 2-2h5v18H6a2 2 0 0 1-2-2zM13 3h5a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-5zM7 8h2M7 12h2M15 8h2M15 12h2"/></svg>Gedächtnis</a>
+    <a class="on" href="#angebote"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 3h9l4 4v14H6zM15 3v4h4M9 12h6M9 16h6"/></svg>Angebote</a>
+    <a href="#agenten"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="4" y="7" width="16" height="12" rx="2"/><path d="M12 3v4M8 12h.01M16 12h.01M9 16h6"/></svg>Agenten</a>
+    <a href="#datenmodus"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-8M22 20H2"/></svg>Datenmodus</a>
+    <a href="#admin"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/></svg>WMC-Admin</a>
+  </nav>
+  <div style="margin-top: auto; padding: 12px; border-radius: 10px; background: rgba(255,255,255,.08); color: #EAE4E1; font-size: 12px">
+    <div style="display: flex; align-items: center; gap: 10px">
+      <span style="width: 32px; height: 32px; border-radius: 50%; background: #C1B2AA; color: #3C261D; display: inline-flex; align-items: center; justify-content: center; font-weight: 700"><span class="u-init">CW</span></span>
+      <div style="min-width: 0"><div style="font-weight: 600; color: #fff"><span class="u-name">Christian Wallwiener</span></div><div><span class="u-role">Geschäftsführer</span></div></div>
+    </div>
+    <div style="margin-top: 10px; display: flex; justify-content: space-between"><span>Modellbudget Oktober</span><span style="font-weight: 600">62 %</span></div>
+    <div style="height: 4px; border-radius: 2px; background: rgba(255,255,255,.15); margin-top: 6px"><div style="width: 62%; height: 4px; border-radius: 2px; background: #D55C05"></div></div>
+    <div style="margin-top: 10px; display: flex; flex-direction: column; gap: 6px">
+      <label for="bud-angebote" style="font-weight: 600; color: #fff">Zusatzbudget anfragen</label>
+      <textarea id="bud-angebote" rows="2" placeholder="Begründung, z. B. Lenkungskreis vorgezogen, zusätzliche Datenraum-Analyse Musterstadt …" style="width: 100%; box-sizing: border-box; font: inherit; font-size: 12px; padding: 8px; border-radius: 8px; border: 1px solid rgba(255,255,255,.25); background: rgba(255,255,255,.06); color: #fff; resize: vertical"></textarea>
+      <div style="display: flex; flex-direction: column; gap: 6px">
+        <label for="budamt-angebote" style="position: absolute; left: -9999px">Betrag</label>
+        <input id="budamt-angebote" type="text" value="+ 500 €" style="width: 100%; font: inherit; font-size: 12px; padding: 8px; border-radius: 8px; border: 1px solid rgba(255,255,255,.25); background: rgba(255,255,255,.06); color: #fff; min-height: 36px; box-sizing: border-box">
+        <button type="button" style="flex: 1; min-height: 36px; border-radius: 8px; border: 0; background: #D55C05; color: #fff; font: inherit; font-size: 12px; font-weight: 600; cursor: pointer">Anfrage an AI-God</button>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<main style="flex: 999 1 560px; min-width: 0; display: flex; flex-wrap: wrap; align-items: stretch">
+  <section style="flex: 1 1 360px; max-width: 440px; border-right: 1px solid #E6DFDB; padding: 24px 22px; box-sizing: border-box; display: flex; flex-direction: column; gap: 14px; background: #fff">
+    <div>
+      <div class="muted" style="font-size: 12px">Angebote / Neu</div>
+      <h1 style="font-size: 20px; letter-spacing: -0.3px">Angebot erstellen</h1>
+    </div>
+    <div class="card" style="padding: 12px 14px; display: flex; flex-direction: column; gap: 8px; background: #F7F4F2">
+      <div class="muted" style="font-size: 11px; font-weight: 600; letter-spacing: .5px">ANFRAGE</div>
+      <div style="font-size: 13px; line-height: 1.5"><b>Kreisklinikum Oberland</b> · 410 Betten · kommunal, Landkreis als Träger · Anfrage per E-Mail vom 22.10.2026 (Geschäftsführung): Sanierungsgutachten mit Maßnahmenplan, Fokus Liquidität und Leistungsgruppen-Fähigkeit; Ergebnis bis Kreistagssitzung März 2027.</div>
+      <div style="display: flex; gap: 6px; flex-wrap: wrap"><span class="chip">Quelle: Outlook</span><span class="chip">Sanierung</span><span class="chip">KHVVG</span></div>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 8px">
+      <div class="muted" style="font-size: 11px; font-weight: 600; letter-spacing: .5px">AGENT „ANGEBOTSERSTELLUNG“ · v2.2 · OPUS 5.5</div>
+      <div class="step done"><span class="chip g">✓</span><div><div style="font-weight: 600; font-size: 13px">Vergleichsprojekte im Gedächtnis</div><div class="muted" style="font-size: 12px">4 Treffer: Westfalen 2024, Allgäu 2025, Südpfalz 2022, Ostsee 2026 (LOP)</div></div></div>
+      <div class="step done"><span class="chip g">✓</span><div><div style="font-weight: 600; font-size: 13px">Referenzen &amp; Team</div><div class="muted" style="font-size: 12px">3 Referenzen freigegeben · Team: Wallwiener (Lead), Fenger, Werber, Krüger</div></div></div>
+      <div class="step done"><span class="chip g">✓</span><div><div style="font-weight: 600; font-size: 13px">Phasenplan &amp; Preislogik</div><div class="muted" style="font-size: 12px">3 Phasen, 16 Wochen · Modulpreise aus LOP Ostsee, angepasst auf 410 Betten</div></div></div>
+      <div class="step done"><span class="chip g">✓</span><div><div style="font-weight: 600; font-size: 13px">LOP-Entwurf im WMC-Format</div><div class="muted" style="font-size: 12px">Word, 31 Seiten · 2:48 Min. · jede Aussage mit Herkunft</div></div></div>
+      <div class="step"><span class="chip o">→</span><div><div style="font-weight: 600; font-size: 13px">Review durch Partner</div><div class="muted" style="font-size: 12px">Preis, Team und Zusagen prüfen; erst dann Versand</div></div></div>
+    </div>
+    <div style="margin-top: auto; display: flex; flex-direction: column; gap: 8px; font-size: 12px">
+      <div style="display: flex; justify-content: space-between"><span class="muted">Zeitaufwand bisher</span><b>Agent 2:48 Min. · Berater 0 h</b></div>
+      <div style="display: flex; justify-content: space-between"><span class="muted">Bisheriger Durchschnitt LOP</span><b>2,5 Beratertage</b></div>
+      <div style="display: flex; justify-content: space-between"><span class="muted">Herkunft der Angebotsaussagen</span><b>82 % Gedächtnis · 18 % neu</b></div>
+    </div>
+  </section>
+
+  <section style="flex: 999 1 520px; min-width: 0; padding: 24px 32px; box-sizing: border-box; display: flex; flex-direction: column; gap: 14px">
+    <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px">
+      <div><div class="muted" style="font-size: 12px">Entwurf v2 · Review ausstehend</div><h2 style="font-size: 16px">LOP Kreisklinikum Oberland – Sanierungsgutachten</h2></div>
+      <div style="display: flex; gap: 8px; flex-wrap: wrap"><button class="btn s" type="button">Word öffnen</button><button class="btn s" type="button">Preis anpassen</button><button class="btn s" type="button">Als PowerPoint</button><button class="btn s p" type="button">Zum Review an Partner</button></div>
+    </div>
+
+    <div class="card lop" style="padding: 22px 26px; display: flex; flex-direction: column; gap: 2px; flex: 1">
+      <div style="display: flex; justify-content: space-between; align-items: center"><div style="font-size: 22px; font-weight: 800; letter-spacing: -1px; color: #3C261D">WMC<span style="font-size: 9px; letter-spacing: 3px; margin-left: 6px; font-weight: 600; color: #C1B2AA">HEALTHCARE</span></div><div class="muted" style="font-size: 12px">Letter of Proposal · 24.10.2026 · vertraulich</div></div>
+      <h2>1 · Ausgangslage und Zielsetzung</h2>
+      <p>Das Kreisklinikum Oberland steht mit 410 Betten und kommunaler Trägerschaft vor der doppelten Aufgabe, kurzfristig die Liquidität zu sichern und mittelfristig die Leistungsgruppen-Fähigkeit nach KHVVG nachzuweisen. Vergleichbare Häuser haben in dieser Konstellation innerhalb von 12 Monaten Liquiditätseffekte von 2,5–4 Mio. € realisiert. <a class="ref" href="#gedaechtnis">Gedächtnis · Westfalen 2024, Allgäu 2025</a></p>
+      <h2>2 · Vorgehen in drei Phasen (16 Wochen)</h2>
+      <p><b>Phase 1 · Diagnose (Woche 1–5):</b> Finanz- und Leistungsanalyse, Interviews mit Chefärzten und Leitungen, Leistungsgruppen-Vorprüfung. <a class="ref" href="#gedaechtnis">Gedächtnis · Südpfalz 2022</a></p>
+      <p><b>Phase 2 · Maßnahmen (Woche 6–12):</b> Ergebnistreiberbaum, Maßnahmenkatalog mit Wirkung und Umsetzbarkeit, Liquiditätsbrücke, Notaufnahme-Konzept nach WMC EMERGENCY. <a class="ref" href="#gedaechtnis">Gedächtnis · Westfalen 2024, EMERGENCY 2023</a></p>
+      <p><b>Phase 3 · Gremienreife (Woche 13–16):</b> Sanierungsgutachten, Beschlussvorlage für den Kreistag, Kommunikationsplan. <a class="ref" href="#gedaechtnis">Gedächtnis · Gremienvorlage Insolvenz EV</a></p>
+      <h2>3 · Team</h2>
+      <p>Christian Wallwiener (Geschäftsführer, Gesamtverantwortung) · Sebastian Fenger (Projektleitung, Leistungsgruppen) · Peter Werber (Medizincontrolling) · Lena Krüger (Finanzen). <span class="chip o" style="font-size: 11px">neu: Verfügbarkeit prüfen</span></p>
+      <h2>4 · Referenzen</h2>
+      <p>Drei freigegebene Referenzen kommunaler Häuser zwischen 200 und 400 Betten mit Sanierungsgutachten und Kreistagsbeschluss. <a class="ref" href="#gedaechtnis">Gedächtnis · Referenzliste 2026</a></p>
+      <h2>5 · Honorar</h2>
+      <p>Modulares Festhonorar je Phase, Gesamtrahmen abgeleitet aus LOP Klinikverbund Ostsee 2026, skaliert auf 410 Betten und einen Standort. <span class="chip o" style="font-size: 11px">Preis: Partnerfreigabe erforderlich</span> <a class="ref" href="#gedaechtnis">Gedächtnis · LOP Ostsee 2026</a></p>
+      <div class="muted" style="font-size: 12px; margin-top: auto; padding-top: 10px; border-top: 1px solid #EFEAE7">Auszug · vollständiger Entwurf 31 Seiten in Word · Beispiel fiktiv</div>
+    </div>
+  </section>
+</main>
+</div>
+</section>
+<section class="screen" id="agenten" hidden>
+<div style="min-height: 100vh; display: flex; flex-wrap: wrap; align-items: stretch">
+
+<aside style="position: relative; width: 248px; flex: 0 0 248px; background: #3C261D; display: flex; flex-direction: column; padding: 24px 16px; box-sizing: border-box; gap: 24px">
+  <div style="padding: 0 8px">
+    <a class="logout-btn" href="#logout" title="Abmelden"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14" aria-hidden="true"><path d="M10 17l5-5-5-5M15 12H3M21 3v18"/></svg>Abmelden</a><div style="font-size: 30px; font-weight: 800; letter-spacing: -1px; color: #fff; line-height: 1">WMC</div>
+    <div style="font-size: 9px; letter-spacing: 3px; color: #C1B2AA; font-weight: 600; margin-top: 2px">HEALTHCARE</div>
+    <div style="margin-top: 14px; display: inline-flex; align-items: center; gap: 8px; color: #EAE4E1; font-size: 12px; font-weight: 600"><span style="width: 8px; height: 8px; border-radius: 50%; background: #D55C05; display: inline-block"></span>Intelligence</div>
+  </div>
+  <nav class="nav" style="display: flex; flex-direction: column; gap: 2px">
+    <a href="#start"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>Start</a>
+    <a href="#projekt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>Projekte</a>
+    <a href="#chat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 5h16v11H8l-4 4z"/></svg>Chat</a>
+    <a href="#gedaechtnis"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 5a2 2 0 0 1 2-2h5v18H6a2 2 0 0 1-2-2zM13 3h5a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-5zM7 8h2M7 12h2M15 8h2M15 12h2"/></svg>Gedächtnis</a>
+    <a href="#angebote"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 3h9l4 4v14H6zM15 3v4h4M9 12h6M9 16h6"/></svg>Angebote</a>
+    <a class="on" href="#agenten"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="4" y="7" width="16" height="12" rx="2"/><path d="M12 3v4M8 12h.01M16 12h.01M9 16h6"/></svg>Agenten</a>
+    <a href="#datenmodus"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-8M22 20H2"/></svg>Datenmodus</a>
+    <a href="#admin"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/></svg>WMC-Admin</a>
+  </nav>
+  <div style="margin-top: auto; padding: 12px; border-radius: 10px; background: rgba(255,255,255,.08); color: #EAE4E1; font-size: 12px">
+    <div style="display: flex; align-items: center; gap: 10px">
+      <span style="width: 32px; height: 32px; border-radius: 50%; background: #C1B2AA; color: #3C261D; display: inline-flex; align-items: center; justify-content: center; font-weight: 700"><span class="u-init">CW</span></span>
+      <div style="min-width: 0"><div style="font-weight: 600; color: #fff"><span class="u-name">Christian Wallwiener</span></div><div><span class="u-role">Geschäftsführer</span></div></div>
+    </div>
+    <div style="margin-top: 10px; display: flex; justify-content: space-between"><span>Modellbudget Oktober</span><span style="font-weight: 600">62 %</span></div>
+    <div style="height: 4px; border-radius: 2px; background: rgba(255,255,255,.15); margin-top: 6px"><div style="width: 62%; height: 4px; border-radius: 2px; background: #D55C05"></div></div>
+    <div style="margin-top: 10px; display: flex; flex-direction: column; gap: 6px">
+      <label for="bud-agenten" style="font-weight: 600; color: #fff">Zusatzbudget anfragen</label>
+      <textarea id="bud-agenten" rows="2" placeholder="Begründung, z. B. Lenkungskreis vorgezogen, zusätzliche Datenraum-Analyse Musterstadt …" style="width: 100%; box-sizing: border-box; font: inherit; font-size: 12px; padding: 8px; border-radius: 8px; border: 1px solid rgba(255,255,255,.25); background: rgba(255,255,255,.06); color: #fff; resize: vertical"></textarea>
+      <div style="display: flex; flex-direction: column; gap: 6px">
+        <label for="budamt-agenten" style="position: absolute; left: -9999px">Betrag</label>
+        <input id="budamt-agenten" type="text" value="+ 500 €" style="width: 100%; font: inherit; font-size: 12px; padding: 8px; border-radius: 8px; border: 1px solid rgba(255,255,255,.25); background: rgba(255,255,255,.06); color: #fff; min-height: 36px; box-sizing: border-box">
+        <button type="button" style="flex: 1; min-height: 36px; border-radius: 8px; border: 0; background: #D55C05; color: #fff; font: inherit; font-size: 12px; font-weight: 600; cursor: pointer">Anfrage an AI-God</button>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<main style="flex: 999 1 560px; min-width: 0; padding: 28px 40px; box-sizing: border-box; display: flex; flex-direction: column; gap: 20px">
+  <div style="display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 16px">
+    <div>
+      <h1 style="font-size: 24px; letter-spacing: -0.4px">WMC-Agentenbibliothek</h1>
+      <div class="muted" style="margin-top: 4px">Von Beratern gebaut, im Haus geteilt, versioniert. 31 Agenten · 1.284 Läufe in 30 Tagen.</div>
+    </div>
+    <div style="display: flex; gap: 8px; flex-wrap: wrap">
+      <label for="s-agenten" style="position: absolute; left: -9999px">Suchen</label>
+      <input id="s-agenten" type="text" placeholder="Agent suchen …" style="font: inherit; font-size: 13px; padding: 8px 12px; border: 1px solid #C1B2AA; border-radius: 8px; min-height: 44px; width: 240px; box-sizing: border-box">
+      <a class="btn p" href="#agent-bauen">Agent bauen</a>
+    </div>
+  </div>
+
+  <div style="display: flex; gap: 4px; flex-wrap: wrap">
+    <a class="tab on" href="#agenten">WMC-Bibliothek</a>
+    <a class="tab" href="#agenten">Meine Agenten (9)</a>
+    <a class="tab" href="#agenten">Mit mir geteilt (6)</a>
+    <a class="tab" href="#agenten">Freigabe ausstehend (2)</a>
+    <span style="flex: 1"></span>
+    <span class="chip" style="align-self: center">Leistungsbereich: Alle</span><span class="chip" style="align-self: center">Sortierung: Nutzung</span>
+  </div>
+
+  <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px">
+    <article class="ag">
+      <div style="display: flex; gap: 12px; align-items: center"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-8M22 20H2"/></svg></span><div><h3>Jahresabschluss-Analyse</h3><div class="muted" style="font-size: 12px">v3.0 · P. Werber · Sanierung</div></div></div>
+      <div style="font-size: 13px">Liest JA/BWA, berechnet Kennzahlen, vergleicht mit WMC-Benchmark und schreibt den Finanzteil der Erstanalyse.</div>
+      <div style="display: flex; gap: 6px; flex-wrap: wrap"><span class="chip">Datenraum</span><span class="chip">Tabellen</span><span class="chip">Benchmark-DB</span><span class="chip">Word</span></div>
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-top: auto"><span class="muted" style="font-size: 12px">312 Läufe · 4,7 ★ · Opus 5.5</span><a class="btn s" href="#chat">Starten</a></div>
+    </article>
+    <article class="ag">
+      <div style="display: flex; gap: 12px; align-items: center"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h10"/></svg></span><div><h3>Leistungsgruppen-Check</h3><div class="muted" style="font-size: 12px">v2.1 · S. Fenger · KHVVG &amp; KHTF</div></div></div>
+      <div style="font-size: 13px">Ordnet §21-Fälle den Leistungsgruppen zu, prüft Qualitätskriterien und markiert gefährdete Gruppen je Standort.</div>
+      <div style="display: flex; gap: 6px; flex-wrap: wrap"><span class="chip">§21-Daten</span><span class="chip">LG-Katalog</span><span class="chip">Tabellen</span></div>
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-top: auto"><span class="muted" style="font-size: 12px">188 Läufe · 4,8 ★ · Opus 5.5</span><a class="btn s" href="#chat">Starten</a></div>
+    </article>
+    <article class="ag">
+      <div style="display: flex; gap: 12px; align-items: center"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h14v16H5zM9 9h6M9 13h6"/></svg></span><div><h3>Managementletter</h3><div class="muted" style="font-size: 12px">v1.4 · C. Wallwiener · Alle</div></div></div>
+      <div style="font-size: 13px">Fasst Woche, Maßnahmenstand und Entscheidungsbedarf aus Chats, Protokollen und Analysen zum Lenkungskreis-Letter zusammen.</div>
+      <div style="display: flex; gap: 6px; flex-wrap: wrap"><span class="chip">Datenraum</span><span class="chip">Word</span><span class="chip">PowerPoint</span></div>
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-top: auto"><span class="muted" style="font-size: 12px">241 Läufe · 4,6 ★ · Sonnet 5.5</span><a class="btn s" href="#chat">Starten</a></div>
+    </article>
+    <article class="ag">
+      <div style="display: flex; gap: 12px; align-items: center"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a4 4 0 0 1 4 4v5a4 4 0 0 1-8 0V7a4 4 0 0 1 4-4zM5 11a7 7 0 0 0 14 0M12 18v3"/></svg></span><div><h3>Interview-Auswertung</h3><div class="muted" style="font-size: 12px">v2.0 · C. Wallwiener · Alle</div></div></div>
+      <div style="font-size: 13px">Transkripte aus Interviews und Workshops zu Kernaussagen, Hypothesen und Zitaten je Themenfeld, mit Sprecherzuordnung.</div>
+      <div style="display: flex; gap: 6px; flex-wrap: wrap"><span class="chip">Transkripte</span><span class="chip">Word</span></div>
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-top: auto"><span class="muted" style="font-size: 12px">176 Läufe · 4,9 ★ · Opus 5.5</span><a class="btn s" href="#chat">Starten</a></div>
+    </article>
+    <article class="ag">
+      <div style="display: flex; gap: 12px; align-items: center"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h18v6H3zM3 14h18v6H3z"/></svg></span><div><h3>Chefarztvertrags-Check</h3><div class="muted" style="font-size: 12px">v0.3 Entwurf · C. Wallwiener · Sanierung</div></div></div>
+      <div style="font-size: 13px">Prüft Chefarzt- und Dienstverträge auf wirtschaftliche Klauseln und Abweichungen vom WMC-Benchmark.</div>
+      <div style="display: flex; gap: 6px; flex-wrap: wrap"><span class="chip">Datenraum</span><span class="chip">Benchmark-DB</span><span class="chip">Excel</span></div>
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-top: auto"><span class="chip o">Freigabe ausstehend</span><a class="btn s" href="#agent-bauen">Bearbeiten</a></div>
+    </article>
+    <article class="ag">
+      <div style="display: flex; gap: 12px; align-items: center"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l3 7h7l-5.5 4 2 7-6.5-4.5L5.5 20l2-7L2 9h7z"/></svg></span><div><h3>KHTF-Antragsprüfer</h3><div class="muted" style="font-size: 12px">v1.2 · S. Fenger · KHVVG &amp; KHTF</div></div></div>
+      <div style="font-size: 13px">Gleicht Antragsentwürfe gegen Förderkriterien und Landesvorgaben ab, listet fehlende Nachweise.</div>
+      <div style="display: flex; gap: 6px; flex-wrap: wrap"><span class="chip">Websuche</span><span class="chip">Datenraum</span><span class="chip">Word</span></div>
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-top: auto"><span class="muted" style="font-size: 12px">64 Läufe · 4,5 ★ · Opus 5.5</span><a class="btn s" href="#chat">Starten</a></div>
+    </article>
+    <article class="ag">
+      <div style="display: flex; gap: 12px; align-items: center"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></span><div><h3>Kapazitäts- &amp; Belegungsanalyse</h3><div class="muted" style="font-size: 12px">v1.0 · L. Krüger · Kapazitätsmanagement</div></div></div>
+      <div style="font-size: 13px">Auslastung, Verweildauer und Bettenbedarf je Fachabteilung aus Belegungsdaten; Szenarien für Bettenabbau.</div>
+      <div style="display: flex; gap: 6px; flex-wrap: wrap"><span class="chip">Tabellen</span><span class="chip">Chart</span></div>
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-top: auto"><span class="muted" style="font-size: 12px">41 Läufe · 4,4 ★ · Sonnet 5.5</span><a class="btn s" href="#datenmodus">Starten</a></div>
+    </article>
+    <article class="ag">
+      <div style="display: flex; gap: 12px; align-items: center"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16v12H4zM8 20h8"/></svg></span><div><h3>Gremienvorlage</h3><div class="muted" style="font-size: 12px">v1.6 · P. Werber · Alle</div></div></div>
+      <div style="font-size: 13px">Baut aus freigegebenen Analysen eine Vorlage für Aufsichtsrat/Kreistag im WMC-Foliendesign, inkl. Beschlussvorschlag.</div>
+      <div style="display: flex; gap: 6px; flex-wrap: wrap"><span class="chip">PowerPoint</span><span class="chip">WMC-Template</span></div>
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-top: auto"><span class="muted" style="font-size: 12px">129 Läufe · 4,7 ★ · Sonnet 5.5</span><a class="btn s" href="#chat">Starten</a></div>
+    </article>
+    <article class="ag">
+      <div style="display: flex; gap: 12px; align-items: center"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16M8 4v16"/></svg></span><div><h3>Due-Diligence-Checkliste</h3><div class="muted" style="font-size: 12px">v2.3 · M. Albrecht · PIPE</div></div></div>
+      <div style="font-size: 13px">Arbeitet die WMC-DD-Checkliste gegen den Datenraum ab, markiert Lücken und Red Flags mit Dokumentverweis.</div>
+      <div style="display: flex; gap: 6px; flex-wrap: wrap"><span class="chip">Datenraum</span><span class="chip">Excel</span><span class="chip">Vertraulich</span></div>
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-top: auto"><span class="muted" style="font-size: 12px">58 Läufe · 4,8 ★ · Opus 5.5</span><a class="btn s" href="#chat">Starten</a></div>
+    </article>
+  </div>
+</main>
+</div>
+</section>
+<section class="screen" id="agent-bauen" hidden>
+<div style="min-height: 100vh; display: flex; flex-wrap: wrap; align-items: stretch">
+
+<aside style="position: relative; width: 248px; flex: 0 0 248px; background: #3C261D; display: flex; flex-direction: column; padding: 24px 16px; box-sizing: border-box; gap: 24px">
+  <div style="padding: 0 8px">
+    <a class="logout-btn" href="#logout" title="Abmelden"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14" aria-hidden="true"><path d="M10 17l5-5-5-5M15 12H3M21 3v18"/></svg>Abmelden</a><div style="font-size: 30px; font-weight: 800; letter-spacing: -1px; color: #fff; line-height: 1">WMC</div>
+    <div style="font-size: 9px; letter-spacing: 3px; color: #C1B2AA; font-weight: 600; margin-top: 2px">HEALTHCARE</div>
+    <div style="margin-top: 14px; display: inline-flex; align-items: center; gap: 8px; color: #EAE4E1; font-size: 12px; font-weight: 600"><span style="width: 8px; height: 8px; border-radius: 50%; background: #D55C05; display: inline-block"></span>Intelligence</div>
+  </div>
+  <nav class="nav" style="display: flex; flex-direction: column; gap: 2px">
+    <a href="#start"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>Start</a>
+    <a href="#projekt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>Projekte</a>
+    <a href="#chat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 5h16v11H8l-4 4z"/></svg>Chat</a>
+    <a href="#gedaechtnis"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 5a2 2 0 0 1 2-2h5v18H6a2 2 0 0 1-2-2zM13 3h5a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-5zM7 8h2M7 12h2M15 8h2M15 12h2"/></svg>Gedächtnis</a>
+    <a href="#angebote"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 3h9l4 4v14H6zM15 3v4h4M9 12h6M9 16h6"/></svg>Angebote</a>
+    <a class="on" href="#agenten"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="4" y="7" width="16" height="12" rx="2"/><path d="M12 3v4M8 12h.01M16 12h.01M9 16h6"/></svg>Agenten</a>
+    <a href="#datenmodus"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-8M22 20H2"/></svg>Datenmodus</a>
+    <a href="#admin"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/></svg>WMC-Admin</a>
+  </nav>
+  <div style="margin-top: auto; padding: 12px; border-radius: 10px; background: rgba(255,255,255,.08); color: #EAE4E1; font-size: 12px">
+    <div style="display: flex; align-items: center; gap: 10px">
+      <span style="width: 32px; height: 32px; border-radius: 50%; background: #C1B2AA; color: #3C261D; display: inline-flex; align-items: center; justify-content: center; font-weight: 700"><span class="u-init">CW</span></span>
+      <div style="min-width: 0"><div style="font-weight: 600; color: #fff"><span class="u-name">Christian Wallwiener</span></div><div><span class="u-role">Geschäftsführer</span></div></div>
+    </div>
+    <div style="margin-top: 10px; display: flex; justify-content: space-between"><span>Modellbudget Oktober</span><span style="font-weight: 600">62 %</span></div>
+    <div style="height: 4px; border-radius: 2px; background: rgba(255,255,255,.15); margin-top: 6px"><div style="width: 62%; height: 4px; border-radius: 2px; background: #D55C05"></div></div>
+    <div style="margin-top: 10px; display: flex; flex-direction: column; gap: 6px">
+      <label for="bud-agent-bauen" style="font-weight: 600; color: #fff">Zusatzbudget anfragen</label>
+      <textarea id="bud-agent-bauen" rows="2" placeholder="Begründung, z. B. Lenkungskreis vorgezogen, zusätzliche Datenraum-Analyse Musterstadt …" style="width: 100%; box-sizing: border-box; font: inherit; font-size: 12px; padding: 8px; border-radius: 8px; border: 1px solid rgba(255,255,255,.25); background: rgba(255,255,255,.06); color: #fff; resize: vertical"></textarea>
+      <div style="display: flex; flex-direction: column; gap: 6px">
+        <label for="budamt-agent-bauen" style="position: absolute; left: -9999px">Betrag</label>
+        <input id="budamt-agent-bauen" type="text" value="+ 500 €" style="width: 100%; font: inherit; font-size: 12px; padding: 8px; border-radius: 8px; border: 1px solid rgba(255,255,255,.25); background: rgba(255,255,255,.06); color: #fff; min-height: 36px; box-sizing: border-box">
+        <button type="button" style="flex: 1; min-height: 36px; border-radius: 8px; border: 0; background: #D55C05; color: #fff; font: inherit; font-size: 12px; font-weight: 600; cursor: pointer">Anfrage an AI-God</button>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<main style="flex: 999 1 560px; min-width: 0; display: flex; flex-wrap: wrap; align-items: stretch">
+  <section style="flex: 999 1 520px; min-width: 0; padding: 28px 32px; box-sizing: border-box; display: flex; flex-direction: column; gap: 20px">
+    <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px">
+      <div>
+        <div class="muted" style="font-size: 12px"><a href="#agenten" style="color: #5E5652; text-decoration: none">Agenten</a> / Neuer Agent</div>
+        <h1 style="font-size: 22px; letter-spacing: -0.3px">Agent bauen</h1>
+      </div>
+      <div style="display: flex; gap: 8px; flex-wrap: wrap">
+        <span class="chip">Entwurf · v0.3</span>
+        <button class="btn s" type="button">Vorlage laden</button>
+        <a class="btn s" href="#agenten">In Bibliothek veröffentlichen</a>
+        <button class="btn s p" type="button">Speichern</button>
+      </div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px">
+      <div class="card" style="padding: 18px; display: flex; flex-direction: column; gap: 14px">
+        <h2 style="font-size: 14px">1 · Rolle</h2>
+        <div><label class="l" for="n-agent-bauen">Name</label><input class="f" id="n-agent-bauen" type="text" value="Chefarztvertrags-Check"></div>
+        <div><label class="l" for="d-agent-bauen">Was der Agent tut</label><textarea class="f" id="d-agent-bauen" rows="3">Prüft Chefarzt- und Dienstverträge aus dem Datenraum des Projekts auf wirtschaftlich relevante Klauseln: variable Vergütung, Bonusregeln, Liquidationsrechte, Beteiligung an Wahlleistungen, Kündigungsfristen, Nebentätigkeit. Vergleicht mit WMC-Benchmarks und markiert Abweichungen mit Einsparpotenzial. Ausgabe als Tabelle je Vertrag plus Managementhinweis.</textarea></div>
+        <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px">
+          <div><label class="l" for="m-agent-bauen">Modell</label><select class="f" id="m-agent-bauen"><option>Claude Opus 5.5</option><option>Claude Sonnet 5.5</option><option>GPT-5</option></select></div>
+          <div><label class="l" for="r-agent-bauen">Reasoning</label><select class="f" id="r-agent-bauen"><option>Tief</option><option>Standard</option><option>Schnell</option></select></div>
+        </div>
+      </div>
+
+      <div class="card" style="padding: 18px; display: flex; flex-direction: column; gap: 14px">
+        <h2 style="font-size: 14px">2 · Werkzeuge</h2>
+        <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 5px">
+          <label class="tool on"><input type="checkbox" checked><span>Datenraum</span></label>
+          <label class="tool on"><input type="checkbox" checked><span>WMC-Gedächtnis</span></label>
+          <label class="tool on"><input type="checkbox" checked><span>Benchmark-DB</span></label>
+          <label class="tool on"><input type="checkbox" checked><span>Tabellen (Excel)</span></label>
+          <label class="tool"><input type="checkbox"><span>Websuche</span></label>
+          <label class="tool"><input type="checkbox"><span>SharePoint</span></label>
+          <label class="tool on"><input type="checkbox" checked><span>Word/PPT-Export</span></label>
+          <label class="tool"><input type="checkbox"><span>Agent aufrufen</span></label>
+          <label class="tool"><input type="checkbox"><span>Outlook-Entwurf</span></label>
+        </div>
+        <div style="font-size: 12px" class="muted">Werkzeuge laufen innerhalb des Projekts; der Agent sieht nur Daten, auf die der ausführende Berater Zugriff hat.</div>
+        <h2 style="font-size: 14px; margin-top: 4px">3 · Wissen</h2>
+        <div style="display: flex; gap: 8px; flex-wrap: wrap"><span class="chip">WMC-Klauselkatalog Chefarztverträge.docx</span><span class="chip">Benchmark variable Vergütung 2025.xlsx</span><button class="btn s" type="button">Datei hinzufügen</button></div>
+      </div>
+    </div>
+
+    <div class="card" style="padding: 18px; display: flex; flex-direction: column; gap: 12px">
+      <div style="display: flex; align-items: center; justify-content: space-between"><h2 style="font-size: 14px">4 · Ablauf</h2><button class="btn s" type="button">Schritt hinzufügen</button></div>
+      <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px">
+        <div class="step"><span class="chip o">1</span><div><div style="font-weight: 600; font-size: 13px">Verträge finden</div><div class="muted" style="font-size: 12px">Datenraum · Ordner 04 Verträge · Typ „Chefarzt-/Dienstvertrag“</div></div></div>
+        <div class="step"><span class="chip o">2</span><div><div style="font-weight: 600; font-size: 13px">Klauseln extrahieren</div><div class="muted" style="font-size: 12px">je Vertrag strukturiert nach Klauselkatalog, mit Seitenangabe</div></div></div>
+        <div class="step"><span class="chip o">3</span><div><div style="font-weight: 600; font-size: 13px">Gegen Benchmark &amp; Gedächtnis prüfen</div><div class="muted" style="font-size: 12px">Benchmark-DB · Abweichung &gt; 15 % · Klauselmuster aus Referenzwerken</div></div></div>
+        <div class="step"><span class="chip o">4</span><div><div style="font-weight: 600; font-size: 13px">Ausgabe erzeugen</div><div class="muted" style="font-size: 12px">Tabelle (Excel) + Managementhinweis (Word) · Freigabe durch Berater</div></div></div>
+      </div>
+      <div style="display: flex; gap: 16px; flex-wrap: wrap; align-items: center; font-size: 13px">
+        <span><b>Ausgabeformat:</b> Tabelle + Memo</span><span><b>Freigabe:</b> Berater prüft vor Ablage</span><span><b>Laufzeit geschätzt:</b> 4–6 Min. bei 12 Verträgen</span><span><b>Kostenrahmen:</b> ca. 3,20 € je Lauf</span>
+      </div>
+    </div>
+  </section>
+
+  <aside style="flex: 1 1 320px; max-width: 380px; border-left: 1px solid #E6DFDB; background: #fff; padding: 24px 20px; box-sizing: border-box; display: flex; flex-direction: column; gap: 14px">
+    <div style="display: flex; align-items: center; justify-content: space-between"><h2 style="font-size: 14px">Testlauf</h2><span class="chip g">Fertig · 4:12 Min.</span></div>
+    <div class="muted" style="font-size: 12px">Projekt: Kreiskrankenhaus Musterstadt · 12 Verträge gefunden · Opus 5.5 · Reasoning tief</div>
+    <div style="border: 1px solid #E6DFDB; border-radius: 10px; overflow: hidden; font-size: 12px">
+      <div style="display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 0; background: #F7F4F2; font-weight: 600; padding: 8px 10px">
+        <span>Vertrag</span><span>Abweichung</span><span>Potenzial p.a.</span>
+      </div>
+      <div style="display: grid; grid-template-columns: 1.4fr 1fr 1fr; padding: 8px 10px; border-top: 1px solid #EFEAE7"><span>CA Chirurgie</span><span class="chip o" style="justify-self: start">Bonus +38 %</span><span>210 T€</span></div>
+      <div style="display: grid; grid-template-columns: 1.4fr 1fr 1fr; padding: 8px 10px; border-top: 1px solid #EFEAE7"><span>CA Innere</span><span class="chip" style="justify-self: start">im Rahmen</span><span>—</span></div>
+      <div style="display: grid; grid-template-columns: 1.4fr 1fr 1fr; padding: 8px 10px; border-top: 1px solid #EFEAE7"><span>CA Anästhesie</span><span class="chip o" style="justify-self: start">Liquidation 100 %</span><span>95 T€</span></div>
+      <div style="display: grid; grid-template-columns: 1.4fr 1fr 1fr; padding: 8px 10px; border-top: 1px solid #EFEAE7"><span>CA Gyn/Geb</span><span class="chip o" style="justify-self: start">Kündigung 24 Mon.</span><span>Risiko</span></div>
+      <div style="display: grid; grid-template-columns: 1.4fr 1fr 1fr; padding: 8px 10px; border-top: 1px solid #EFEAE7"><span>+ 8 weitere</span><span></span><span></span></div>
+    </div>
+    <div style="font-size: 11px; padding: 8px 10px; border-radius: 8px; background: #F7F4F2"><b>Managementhinweis (Auszug):</b> Drei von zwölf Verträgen weichen in der variablen Vergütung deutlich vom Benchmark ab; Neuverhandlung im Rahmen der Sanierung mit Potenzial von ca. 0,3 Mio. € p.a. Quelle je Klausel siehe Tabelle, Spalte „Seite“.</div>
+    <div style="display: flex; gap: 8px; flex-wrap: wrap">
+      <button class="btn s" type="button">Ergebnis öffnen</button>
+      <button class="btn s" type="button">Erneut testen</button>
+      <a class="btn s" href="#chat">Im Chat nachfragen</a>
+    </div>
+    <div style="margin-top: auto; border-top: 1px solid #EFEAE7; padding-top: 12px; font-size: 12px" class="muted">Sichtbarkeit: <b>Nur ich</b> · Nach Veröffentlichung: WMC-Bibliothek, Owner C. Wallwiener, Versionierung aktiv.</div>
+  </aside>
+</main>
+</div>
+</section>
+<section class="screen" id="datenmodus" hidden>
+<div style="min-height: 100vh; display: flex; flex-wrap: wrap; align-items: stretch">
+
+<aside style="position: relative; width: 248px; flex: 0 0 248px; background: #3C261D; display: flex; flex-direction: column; padding: 24px 16px; box-sizing: border-box; gap: 24px">
+  <div style="padding: 0 8px">
+    <a class="logout-btn" href="#logout" title="Abmelden"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14" aria-hidden="true"><path d="M10 17l5-5-5-5M15 12H3M21 3v18"/></svg>Abmelden</a><div style="font-size: 30px; font-weight: 800; letter-spacing: -1px; color: #fff; line-height: 1">WMC</div>
+    <div style="font-size: 9px; letter-spacing: 3px; color: #C1B2AA; font-weight: 600; margin-top: 2px">HEALTHCARE</div>
+    <div style="margin-top: 14px; display: inline-flex; align-items: center; gap: 8px; color: #EAE4E1; font-size: 12px; font-weight: 600"><span style="width: 8px; height: 8px; border-radius: 50%; background: #D55C05; display: inline-block"></span>Intelligence</div>
+  </div>
+  <nav class="nav" style="display: flex; flex-direction: column; gap: 2px">
+    <a href="#start"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>Start</a>
+    <a href="#projekt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>Projekte</a>
+    <a href="#chat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 5h16v11H8l-4 4z"/></svg>Chat</a>
+    <a href="#gedaechtnis"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 5a2 2 0 0 1 2-2h5v18H6a2 2 0 0 1-2-2zM13 3h5a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-5zM7 8h2M7 12h2M15 8h2M15 12h2"/></svg>Gedächtnis</a>
+    <a href="#angebote"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 3h9l4 4v14H6zM15 3v4h4M9 12h6M9 16h6"/></svg>Angebote</a>
+    <a href="#agenten"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="4" y="7" width="16" height="12" rx="2"/><path d="M12 3v4M8 12h.01M16 12h.01M9 16h6"/></svg>Agenten</a>
+    <a class="on" href="#datenmodus"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-8M22 20H2"/></svg>Datenmodus</a>
+    <a href="#admin"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/></svg>WMC-Admin</a>
+  </nav>
+  <div style="margin-top: auto; padding: 12px; border-radius: 10px; background: rgba(255,255,255,.08); color: #EAE4E1; font-size: 12px">
+    <div style="display: flex; align-items: center; gap: 10px">
+      <span style="width: 32px; height: 32px; border-radius: 50%; background: #C1B2AA; color: #3C261D; display: inline-flex; align-items: center; justify-content: center; font-weight: 700"><span class="u-init">CW</span></span>
+      <div style="min-width: 0"><div style="font-weight: 600; color: #fff"><span class="u-name">Christian Wallwiener</span></div><div><span class="u-role">Geschäftsführer</span></div></div>
+    </div>
+    <div style="margin-top: 10px; display: flex; justify-content: space-between"><span>Modellbudget Oktober</span><span style="font-weight: 600">62 %</span></div>
+    <div style="height: 4px; border-radius: 2px; background: rgba(255,255,255,.15); margin-top: 6px"><div style="width: 62%; height: 4px; border-radius: 2px; background: #D55C05"></div></div>
+    <div style="margin-top: 10px; display: flex; flex-direction: column; gap: 6px">
+      <label for="bud-datenmodus" style="font-weight: 600; color: #fff">Zusatzbudget anfragen</label>
+      <textarea id="bud-datenmodus" rows="2" placeholder="Begründung, z. B. Lenkungskreis vorgezogen, zusätzliche Datenraum-Analyse Musterstadt …" style="width: 100%; box-sizing: border-box; font: inherit; font-size: 12px; padding: 8px; border-radius: 8px; border: 1px solid rgba(255,255,255,.25); background: rgba(255,255,255,.06); color: #fff; resize: vertical"></textarea>
+      <div style="display: flex; flex-direction: column; gap: 6px">
+        <label for="budamt-datenmodus" style="position: absolute; left: -9999px">Betrag</label>
+        <input id="budamt-datenmodus" type="text" value="+ 500 €" style="width: 100%; font: inherit; font-size: 12px; padding: 8px; border-radius: 8px; border: 1px solid rgba(255,255,255,.25); background: rgba(255,255,255,.06); color: #fff; min-height: 36px; box-sizing: border-box">
+        <button type="button" style="flex: 1; min-height: 36px; border-radius: 8px; border: 0; background: #D55C05; color: #fff; font: inherit; font-size: 12px; font-weight: 600; cursor: pointer">Anfrage an AI-God</button>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<main style="flex: 999 1 560px; min-width: 0; padding: 28px 40px; box-sizing: border-box; display: flex; flex-direction: column; gap: 18px">
+  <div style="display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 16px">
+    <div>
+      <div class="muted" style="font-size: 12px"><a href="#projekt" style="color: #5E5652; text-decoration: none">Kreiskrankenhaus Musterstadt</a> · Datenmodus</div>
+      <h1 style="font-size: 22px; letter-spacing: -0.3px">§21-Datensatz 2025 · Fallzahl, CMI und Erlös je Fachabteilung</h1>
+    </div>
+    <div style="display: flex; gap: 8px; flex-wrap: wrap">
+      <button class="btn s" type="button">Excel exportieren</button>
+      <button class="btn s" type="button">Chart in PowerPoint</button>
+      <a class="btn s p" href="#chat">Im Chat interpretieren</a>
+    </div>
+  </div>
+
+  <div class="card" style="padding: 12px 16px; display: flex; flex-wrap: wrap; gap: 10px; align-items: center">
+    <span class="chip g">Quelle: §21-Datenlieferung 2025 (Datenraum 02)</span>
+    <span class="chip">22.418 Fälle · 14 Fachabteilungen</span>
+    <span class="chip">Benchmark: WMC-DB, 48 Häuser 200–400 Betten</span>
+    <span class="chip b">Berechnet mit Code · nicht geschätzt</span>
+    <span style="flex: 1"></span>
+    <label for="qq-datenmodus" style="position: absolute; left: -9999px">Frage an die Daten</label>
+    <input id="qq-datenmodus" type="text" placeholder="Frage an die Daten: „Welche Abteilungen liegen beim CMI unter Benchmark?“" style="font: inherit; font-size: 13px; padding: 8px 12px; border: 1px solid #C1B2AA; border-radius: 8px; min-height: 36px; width: 420px; max-width: 100%; box-sizing: border-box">
+  </div>
+
+  <div style="display: grid; grid-template-columns: 1.5fr 1fr; gap: 18px">
+    <section class="card" style="display: flex; flex-direction: column">
+      <div style="display: flex; align-items: center; justify-content: space-between; padding: 14px 16px 8px"><h2 style="font-size: 14px">Kennzahlen je Fachabteilung</h2><span class="muted" style="font-size: 12px">Sortiert nach Erlös</span></div>
+      <div style="overflow-x: auto; padding: 0 6px 8px">
+      <table>
+        <thead><tr><th>Fachabteilung</th><th class="n">Fälle</th><th class="n">Δ Vj.</th><th class="n">CMI</th><th class="n">BM CMI</th><th class="n">VWD</th><th class="n">Erlös T€</th><th>Signal</th></tr></thead>
+        <tbody>
+          <tr><td>Innere Medizin</td><td class="n">5.812</td><td class="n">−3,1 %</td><td class="n">0,94</td><td class="n">1,02</td><td class="n">6,8</td><td class="n">22.140</td><td><span class="chip o">CMI unter BM</span></td></tr>
+          <tr><td>Allgemein-/Viszeralchirurgie</td><td class="n">3.104</td><td class="n">−5,4 %</td><td class="n">1,31</td><td class="n">1,28</td><td class="n">5,9</td><td class="n">16.480</td><td><span class="chip o">Fallzahl rückläufig</span></td></tr>
+          <tr><td>Unfallchirurgie/Orthopädie</td><td class="n">2.966</td><td class="n">+1,2 %</td><td class="n">1,42</td><td class="n">1,39</td><td class="n">6,4</td><td class="n">17.070</td><td><span class="chip g">im Rahmen</span></td></tr>
+          <tr><td>Geburtshilfe/Gynäkologie</td><td class="n">2.731</td><td class="n">−8,9 %</td><td class="n">0,71</td><td class="n">0,78</td><td class="n">3,1</td><td class="n">7.860</td><td><span class="chip o">LG-Mindestmenge?</span></td></tr>
+          <tr><td>Kardiologie</td><td class="n">2.418</td><td class="n">+4,0 %</td><td class="n">1,18</td><td class="n">1,21</td><td class="n">4,7</td><td class="n">11.560</td><td><span class="chip g">im Rahmen</span></td></tr>
+          <tr><td>Geriatrie</td><td class="n">1.642</td><td class="n">+6,7 %</td><td class="n">1,09</td><td class="n">1,05</td><td class="n">15,8</td><td class="n">7.250</td><td><span class="chip g">über BM</span></td></tr>
+          <tr><td>Pädiatrie</td><td class="n">1.388</td><td class="n">−2,2 %</td><td class="n">0,62</td><td class="n">0,69</td><td class="n">3,4</td><td class="n">3.480</td><td><span class="chip o">CMI unter BM</span></td></tr>
+          <tr><td>Urologie</td><td class="n">1.207</td><td class="n">−1,0 %</td><td class="n">0,98</td><td class="n">1,01</td><td class="n">4,2</td><td class="n">4.790</td><td><span class="chip g">im Rahmen</span></td></tr>
+          <tr><td>+ 6 weitere</td><td class="n">1.150</td><td class="n"></td><td class="n"></td><td class="n"></td><td class="n"></td><td class="n">4.610</td><td></td></tr>
+        </tbody>
+      </table>
+      </div>
+      <div style="border-top: 1px solid #EFEAE7; padding: 10px 16px; font-size: 12px" class="muted">Benchmark-Abgleich und Signale regelbasiert (Abweichung &gt; 5 %). Zahlen fiktiv, Beispielmandat.</div>
+    </section>
+
+    <div style="display: flex; flex-direction: column; gap: 18px">
+      <section class="card" style="padding: 14px 16px; display: flex; flex-direction: column; gap: 10px">
+        <div style="display: flex; align-items: center; justify-content: space-between"><h2 style="font-size: 14px">CMI vs. Benchmark – Abweichung in %</h2><span class="muted" style="font-size: 12px">Top-8 Abteilungen</span></div>
+        <div style="display: flex; gap: 8px; align-items: flex-end; padding: 8px 4px 0">
+          <div class="bar"><div class="c"><div class="b o" style="height: 56px"></div></div><div class="l">Innere<br>−7,8</div></div>
+          <div class="bar"><div class="c"><div class="b" style="height: 22px"></div></div><div class="l">Chirurgie<br>+2,3</div></div>
+          <div class="bar"><div class="c"><div class="b" style="height: 20px"></div></div><div class="l">UCH/Ortho<br>+2,2</div></div>
+          <div class="bar"><div class="c"><div class="b o" style="height: 64px"></div></div><div class="l">Gyn/Geb<br>−9,0</div></div>
+          <div class="bar"><div class="c"><div class="b o" style="height: 18px"></div></div><div class="l">Kardio<br>−2,5</div></div>
+          <div class="bar"><div class="c"><div class="b" style="height: 28px"></div></div><div class="l">Geriatrie<br>+3,8</div></div>
+          <div class="bar"><div class="c"><div class="b o" style="height: 72px"></div></div><div class="l">Pädiatrie<br>−10,1</div></div>
+          <div class="bar"><div class="c"><div class="b o" style="height: 22px"></div></div><div class="l">Urologie<br>−3,0</div></div>
+        </div>
+        <div style="display: flex; gap: 14px; font-size: 12px" class="muted"><span><span style="display: inline-block; width: 10px; height: 10px; background: #3C261D; border-radius: 2px; vertical-align: middle"></span> über Benchmark</span><span><span style="display: inline-block; width: 10px; height: 10px; background: #D55C05; border-radius: 2px; vertical-align: middle"></span> unter Benchmark</span></div>
+      </section>
+
+      <section class="card" style="padding: 14px 16px; display: flex; flex-direction: column; gap: 8px">
+        <h2 style="font-size: 14px">Lesart (Claude Opus 5.5)</h2>
+        <div style="font-size: 13px; line-height: 1.55">Der Erlösrückgang konzentriert sich auf Innere und Gyn/Geb: dort treffen rückläufige Fallzahlen auf einen CMI unter Benchmark – Hinweis auf Kodierqualität bzw. Leistungsmix, nicht nur Nachfrage. Gyn/Geb nähert sich bei 2.731 Fällen der Leistungsgruppen-Relevanz; Prüfung der Mindestmengen-Lage empfohlen. Geriatrie wächst über Benchmark und trägt bei langer Verweildauer überproportional zur Belegung bei.</div>
+        <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 4px"><a class="btn s" href="#agenten">Leistungsgruppen-Check starten</a><a class="btn s" href="#chat">Kodierhypothese prüfen</a></div>
+      </section>
+    </div>
+  </div>
+</main>
+</div>
+</section>
+<section class="screen" id="admin" hidden>
+<div style="min-height: 100vh; display: flex; flex-wrap: wrap; align-items: stretch">
+
+<aside style="position: relative; width: 248px; flex: 0 0 248px; background: #3C261D; display: flex; flex-direction: column; padding: 24px 16px; box-sizing: border-box; gap: 24px">
+  <div style="padding: 0 8px">
+    <a class="logout-btn" href="#logout" title="Abmelden"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14" aria-hidden="true"><path d="M10 17l5-5-5-5M15 12H3M21 3v18"/></svg>Abmelden</a><div style="font-size: 30px; font-weight: 800; letter-spacing: -1px; color: #fff; line-height: 1">WMC</div>
+    <div style="font-size: 9px; letter-spacing: 3px; color: #C1B2AA; font-weight: 600; margin-top: 2px">HEALTHCARE</div>
+    <div style="margin-top: 14px; display: inline-flex; align-items: center; gap: 8px; color: #EAE4E1; font-size: 12px; font-weight: 600"><span style="width: 8px; height: 8px; border-radius: 50%; background: #D55C05; display: inline-block"></span>Intelligence</div>
+  </div>
+  <nav class="nav" style="display: flex; flex-direction: column; gap: 2px">
+    <a href="#start"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>Start</a>
+    <a href="#projekt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>Projekte</a>
+    <a href="#chat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 5h16v11H8l-4 4z"/></svg>Chat</a>
+    <a href="#gedaechtnis"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 5a2 2 0 0 1 2-2h5v18H6a2 2 0 0 1-2-2zM13 3h5a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-5zM7 8h2M7 12h2M15 8h2M15 12h2"/></svg>Gedächtnis</a>
+    <a href="#angebote"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 3h9l4 4v14H6zM15 3v4h4M9 12h6M9 16h6"/></svg>Angebote</a>
+    <a href="#agenten"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="4" y="7" width="16" height="12" rx="2"/><path d="M12 3v4M8 12h.01M16 12h.01M9 16h6"/></svg>Agenten</a>
+    <a href="#datenmodus"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-8M22 20H2"/></svg>Datenmodus</a>
+    <a class="on" href="#admin"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/></svg>WMC-Admin</a>
+  </nav>
+  <div style="margin-top: auto; padding: 12px; border-radius: 10px; background: rgba(255,255,255,.08); color: #EAE4E1; font-size: 12px">
+    <div style="display: flex; align-items: center; gap: 10px">
+      <span style="width: 32px; height: 32px; border-radius: 50%; background: #C1B2AA; color: #3C261D; display: inline-flex; align-items: center; justify-content: center; font-weight: 700"><span class="u-init">CW</span></span>
+      <div style="min-width: 0"><div style="font-weight: 600; color: #fff"><span class="u-name">Christian Wallwiener</span></div><div><span class="u-role">Geschäftsführer</span></div></div>
+    </div>
+    <div style="margin-top: 10px; display: flex; justify-content: space-between"><span>Modellbudget Oktober</span><span style="font-weight: 600">62 %</span></div>
+    <div style="height: 4px; border-radius: 2px; background: rgba(255,255,255,.15); margin-top: 6px"><div style="width: 62%; height: 4px; border-radius: 2px; background: #D55C05"></div></div>
+    <div style="margin-top: 10px; display: flex; flex-direction: column; gap: 6px">
+      <label for="bud-admin" style="font-weight: 600; color: #fff">Zusatzbudget anfragen</label>
+      <textarea id="bud-admin" rows="2" placeholder="Begründung, z. B. Lenkungskreis vorgezogen, zusätzliche Datenraum-Analyse Musterstadt …" style="width: 100%; box-sizing: border-box; font: inherit; font-size: 12px; padding: 8px; border-radius: 8px; border: 1px solid rgba(255,255,255,.25); background: rgba(255,255,255,.06); color: #fff; resize: vertical"></textarea>
+      <div style="display: flex; flex-direction: column; gap: 6px">
+        <label for="budamt-admin" style="position: absolute; left: -9999px">Betrag</label>
+        <input id="budamt-admin" type="text" value="+ 500 €" style="width: 100%; font: inherit; font-size: 12px; padding: 8px; border-radius: 8px; border: 1px solid rgba(255,255,255,.25); background: rgba(255,255,255,.06); color: #fff; min-height: 36px; box-sizing: border-box">
+        <button type="button" style="flex: 1; min-height: 36px; border-radius: 8px; border: 0; background: #D55C05; color: #fff; font: inherit; font-size: 12px; font-weight: 600; cursor: pointer">Anfrage an AI-God</button>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<main style="flex: 999 1 560px; min-width: 0; padding: 28px 40px; box-sizing: border-box; display: flex; flex-direction: column; gap: 18px">
+  <div style="display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 16px">
+    <div>
+      <h1 style="font-size: 24px; letter-spacing: -0.4px">WMC-Admin</h1>
+      <div class="muted" style="margin-top: 4px">Berater, Projektzugriffe, Kosten und Modell-Richtlinien für WMC Healthcare GmbH.</div>
+    </div>
+    <div style="display: flex; gap: 8px; flex-wrap: wrap"><button class="btn s" type="button">Audit-Export (CSV)</button><button class="btn s p" type="button">Berater einladen</button></div>
+  </div>
+
+  <div style="display: flex; gap: 4px; flex-wrap: wrap">
+    <a class="tab on" href="#admin">Übersicht</a><a class="tab" href="#admin">Berater &amp; Rollen</a><a class="tab" href="#admin">Projektzugriffe</a><a class="tab" href="#admin">Modelle &amp; Richtlinien</a><a class="tab" href="#admin">Audit-Log</a><a class="tab" href="#admin">Kosten</a>
+  </div>
+
+  <div style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 14px">
+    <div class="card kpi"><span class="k">AKTIVE BERATER</span><span class="v">47</span><span class="muted" style="font-size: 12px">von 52 · 4 Standorte</span></div>
+    <div class="card kpi"><span class="k">OFFENE PROJEKTE</span><span class="v">23</span><span class="muted" style="font-size: 12px">6 vertraulich (PIPE)</span></div>
+    <div class="card kpi"><span class="k">MODELLKOSTEN OKT.</span><span class="v">8.940 €</span><span class="muted" style="font-size: 12px">Budget 12.000 € · 74 %</span></div>
+    <div class="card kpi"><span class="k">AGENTENLÄUFE 30 T.</span><span class="v">1.284</span><span class="muted" style="font-size: 12px">Ø 2,60 € je Lauf</span></div>
+    <div class="card kpi"><span class="k">COMPLIANCE</span><span style="display: flex; gap: 4px; flex-wrap: wrap; margin-top: 4px"><span class="chip g">AVV</span><span class="chip g">§ 203</span><span class="chip g">ZDR</span></span><span class="muted" style="font-size: 12px">DSFA aktualisiert 09/2026</span></div>
+  </div>
+
+  <div style="display: grid; grid-template-columns: 1.3fr 1fr; gap: 18px">
+    <section class="card" style="display: flex; flex-direction: column">
+      <div style="display: flex; align-items: center; justify-content: space-between; padding: 14px 16px 8px"><h2 style="font-size: 14px">Kosten je Projekt · Oktober</h2><span class="muted" style="font-size: 12px">für interne Verrechnung</span></div>
+      <div style="overflow-x: auto; padding: 0 6px 6px">
+      <table>
+        <thead><tr><th>Projekt</th><th>Lead</th><th class="n">Team</th><th class="n">Chats</th><th class="n">Agentenläufe</th><th class="n">Kosten €</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td>Kreiskrankenhaus Musterstadt</td><td>C. Wallwiener</td><td class="n">4</td><td class="n">212</td><td class="n">96</td><td class="n">1.420</td><td><span class="chip g">aktiv</span></td></tr>
+          <tr><td>Klinikverbund Nordhessen</td><td>S. Fenger</td><td class="n">7</td><td class="n">388</td><td class="n">171</td><td class="n">2.310</td><td><span class="chip g">aktiv</span></td></tr>
+          <tr><td>St.-Elisabeth-Stiftung Rhein-Main</td><td>P. Werber</td><td class="n">5</td><td class="n">297</td><td class="n">118</td><td class="n">1.780</td><td><span class="chip g">aktiv</span></td></tr>
+          <tr><td>Projekt Falke (DD)</td><td>M. Albrecht</td><td class="n">3</td><td class="n">164</td><td class="n">58</td><td class="n">1.090</td><td><span class="chip o">vertraulich</span></td></tr>
+          <tr><td>Universitätsklinikum Süd – Kapazitäten</td><td>L. Krüger</td><td class="n">4</td><td class="n">141</td><td class="n">63</td><td class="n">880</td><td><span class="chip g">aktiv</span></td></tr>
+          <tr><td>+ 18 weitere</td><td></td><td class="n"></td><td class="n">602</td><td class="n">778</td><td class="n">1.460</td><td></td></tr>
+        </tbody>
+      </table>
+      </div>
+    </section>
+
+    <div style="display: flex; flex-direction: column; gap: 18px">
+      <section class="card" style="padding: 14px 16px; display: flex; flex-direction: column; gap: 10px">
+        <h2 style="font-size: 14px">Modell-Richtlinien</h2>
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; font-size: 13px"><span>Projektdaten nur über EU-Endpunkte, Zero Data Retention</span><span class="tog" aria-hidden="true"><i></i></span></div>
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; font-size: 13px"><span>Standardmodell Beratung: Claude Opus 5.5, Reasoning tief</span><span class="tog" aria-hidden="true"><i></i></span></div>
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; font-size: 13px"><span>Modell und Quellen in jeder Antwort ausweisen</span><span class="tog" aria-hidden="true"><i></i></span></div>
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; font-size: 13px"><span>Websuche in vertraulichen Projekten (PIPE)</span><span class="tog off" aria-hidden="true"><i></i></span></div>
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; font-size: 13px"><span>Agenten-Veröffentlichung nur nach Freigabe durch Partner</span><span class="tog" aria-hidden="true"><i></i></span></div>
+      </section>
+      <section class="card" style="padding: 14px 16px; display: flex; flex-direction: column; gap: 8px">
+        <div style="display: flex; align-items: center; justify-content: space-between"><h2 style="font-size: 14px">Audit-Log · zuletzt</h2><a href="#admin" style="font-size: 12px; font-weight: 600">Alle</a></div>
+        <div style="font-size: 12px; display: flex; flex-direction: column; gap: 6px">
+          <div style="display: flex; gap: 8px"><span class="muted" style="width: 42px; flex: none">07:41</span><span>S. Fenger kommentiert Antwort #A-20261024-0712 (Musterstadt)</span></div>
+          <div style="display: flex; gap: 8px"><span class="muted" style="width: 42px; flex: none">07:12</span><span>C. Wallwiener · Chat Opus 5.5 · 6 Dokumente · Musterstadt</span></div>
+          <div style="display: flex; gap: 8px"><span class="muted" style="width: 42px; flex: none">07:12</span><span>Agent „Managementletter“ v1.4 gelaufen · Export Word</span></div>
+          <div style="display: flex; gap: 8px"><span class="muted" style="width: 42px; flex: none">06:58</span><span>L. Krüger lädt 3 Dateien in Datenraum 03 Personal</span></div>
+          <div style="display: flex; gap: 8px"><span class="muted" style="width: 42px; flex: none">06:40</span><span class="chip r">Abgelehnt: Zugriff Projekt Falke durch J. Baumann (nicht im Team)</span></div>
+        </div>
+      </section>
+    </div>
+  </div>
+</main>
+</div>
+</section>
+<div class="demo"><b>Klickbares Mockup</b> · WMC Intelligence · Beispielprojekte fiktiv</div>
+<script>
+(function(){
+  var ids=["start", "projekt", "chat", "gedaechtnis", "angebote", "agenten", "agent-bauen", "datenmodus", "admin"];
+  var USERS={
+    "christian.wallwiener":{pw:"wmcChristian2026",first:"Christian",name:"Christian Wallwiener",init:"CW",role:"Geschäftsführer"},
+    "tibor.tinschmann":{pw:"wmcTibor2026",first:"Tibor",name:"Dr. Tibor Tinschmann",init:"TT",role:"Partner"},
+    "sebastian.fenger":{pw:"wmcSebastian2026",first:"Sebastian",name:"Sebastian Fenger",init:"SF",role:"Projektleitung"},
+    "peter.werber":{pw:"wmcPeter2026",first:"Peter",name:"Peter Werber",init:"PW",role:"Medizincontrolling"},
+    "alex.thiel":{pw:"wmcAlex2026",first:"Alex",name:"Alex Thiel",init:"AT",role:"Master Mind"},
+    "alex.reichmann":{pw:"wmcAlex2026",first:"Alex",name:"Alex Reichmann",init:"AR",role:"Manager"},
+    "alex.raabe":{pw:"wmcAlex2026",first:"Alex",name:"Alex Raabe",init:"AR",role:"Manager"},
+    "demo":{pw:"wmcGast2026",first:"Gast",name:"Gast (Demo)",init:"G",role:"Beobachter"}
+  };
+  function getUser(){try{var k=localStorage.getItem("wmc_user");return k&&USERS[k]?USERS[k]:null}catch(e){return null}}
+  function applyUser(u){
+    document.querySelectorAll(".u-first").forEach(function(e){e.textContent=u.first});
+    document.querySelectorAll(".u-name").forEach(function(e){e.textContent=u.name});
+    document.querySelectorAll(".u-init").forEach(function(e){e.textContent=u.init});
+    document.querySelectorAll(".u-role").forEach(function(e){e.textContent=u.role});
+  }
+  function show(){
+    var h=(location.hash||"#start").slice(1);
+    if(h==="logout"){try{localStorage.removeItem("wmc_user")}catch(e){};location.hash="#start";return}
+    var u=getUser();
+    if(!u){ids.forEach(function(i){document.getElementById(i).hidden=true});document.getElementById("login").hidden=false;window.scrollTo(0,0);return}
+    document.getElementById("login").hidden=true;
+    applyUser(u);
+    if(ids.indexOf(h)<0)h="start";
+    ids.forEach(function(i){document.getElementById(i).hidden=(i!==h)});
+    window.scrollTo(0,0);
+  }
+  document.getElementById("loginform").addEventListener("submit",function(e){
+    e.preventDefault();
+    var k=document.getElementById("lu").value.trim().toLowerCase().replace(/\s+/g,".");
+    var p=document.getElementById("lp").value;
+    var err=document.getElementById("lerr");
+    if(USERS[k]&&p===USERS[k].pw){try{localStorage.setItem("wmc_user",k)}catch(x){};err.hidden=true;show();}
+    else{err.hidden=false;}
+  });
+  var d=new Date(),hr=d.getHours();
+  document.getElementById("greet").textContent=hr<11?"Guten Morgen":hr<18?"Guten Tag":"Guten Abend";
+  document.getElementById("today").textContent=d.toLocaleDateString("de-DE",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+  var mdl=document.getElementById("mdl"),eu=document.getElementById("eu");
+  if(mdl&&eu)mdl.addEventListener("change",function(){var g=mdl.value==="Godmode";eu.className=g?"chip danger":"chip g";eu.textContent=g?"Mars-Verarbeitung · ZDR":"EU-Verarbeitung · ZDR";document.querySelectorAll("[data-god]").forEach(function(el){el.hidden=(el.getAttribute("data-god")==="1")!==g;});});
+  window.addEventListener("hashchange",show);
+  document.addEventListener("submit",function(e){if(e.target.id!=="loginform")e.preventDefault()});
+  show();
+})();
+</script>
+
+</body>
+</html>
