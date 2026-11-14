@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Knights of the Morning Sun – WMC und Logicc</title>
+<meta name="description" content="Eine kurze Sage über generative KI im Krankenhaus: Schatten-KI, drei Dämonen und zwei Ritter. Und was WMC und Logicc daraus machen.">
+<meta name="robots" content="noindex">
+<meta property="og:title" content="The Knights of the Morning Sun">
+<meta property="og:description" content="Eine kurze Sage über generative KI im Krankenhaus. Von WMC und Logicc.">
+<meta property="og:image" content="https://www.wmc-plattform.de/knights/assets/poster.jpg">
+<style>
+@font-face{font-family:"IM Fell English";src:url("assets/fonts/im-fell-english-latin-400-normal.woff2") format("woff2");font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:"IM Fell English";src:url("assets/fonts/im-fell-english-latin-400-italic.woff2") format("woff2");font-weight:400;font-style:italic;font-display:swap}
+@font-face{font-family:"Alegreya Sans";src:url("assets/fonts/alegreya-sans-latin-400-normal.woff2") format("woff2");font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:"Alegreya Sans";src:url("assets/fonts/alegreya-sans-latin-400-italic.woff2") format("woff2");font-weight:400;font-style:italic;font-display:swap}
+@font-face{font-family:"Alegreya Sans";src:url("assets/fonts/alegreya-sans-latin-500-normal.woff2") format("woff2");font-weight:500;font-style:normal;font-display:swap}
+@font-face{font-family:"Alegreya Sans";src:url("assets/fonts/alegreya-sans-latin-700-normal.woff2") format("woff2");font-weight:700;font-style:normal;font-display:swap}
+
+:root{
+  --ink:#10161f;        /* Nachthimmel des Films */
+  --stone:#1c2531;      /* Mauerwerk */
+  --mist:#93a3b5;       /* Nebel, gedämpfter Text */
+  --bone:#ece4d2;       /* Pergament, Text auf Dunkel */
+  --gold:#e8ab3c;       /* das Licht */
+  --dawn:#fbf5e6;       /* Morgen */
+  --black:#07090d;
+  --saga:"IM Fell English",Georgia,"Times New Roman",serif;
+  --text:"Alegreya Sans","Segoe UI",system-ui,sans-serif;
+  --wrap:68rem;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--ink);color:var(--bone);font-family:var(--text);font-size:1.1875rem;line-height:1.6;-webkit-font-smoothing:antialiased}
+img,video{display:block;max-width:100%;height:auto}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+.wrap{max-width:var(--wrap);margin:0 auto;padding:0 1.5rem}
+p{margin:0 0 1em;max-width:36em}
+h1,h2,h3{font-family:var(--saga);font-weight:400;margin:0;text-wrap:balance}
+h2{font-size:clamp(2rem,4.6vw,3.4rem);line-height:1.08;letter-spacing:-.005em}
+h3{font-size:clamp(1.5rem,2.6vw,2rem);line-height:1.15}
+.de{font-family:var(--text);font-weight:500;color:var(--mist);font-size:1.0625rem;margin:.6rem 0 1.4rem;max-width:34em}
+
+/* Hero */
+.hero{position:relative;min-height:100svh;display:flex;align-items:flex-end;isolation:isolate;overflow:hidden}
+.hero::before{content:"";position:absolute;inset:0;z-index:-2;background:url("assets/hero.jpg") center 42%/cover no-repeat}
+.hero::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(16,22,31,.25) 0%,rgba(16,22,31,.05) 35%,rgba(16,22,31,.82) 78%,var(--ink) 100%)}
+.hero .wrap{width:100%;padding-bottom:clamp(2.5rem,7vh,5rem);padding-top:6rem}
+.makers{font-family:var(--text);font-weight:500;font-size:1.0625rem;color:var(--bone);margin:0 0 1.2rem}
+h1{font-size:clamp(3rem,10.5vw,8.25rem);line-height:.92;letter-spacing:-.015em;max-width:9.5em}
+.hero p{font-size:clamp(1.15rem,2vw,1.4rem);max-width:30em;margin:1.6rem 0 2rem;color:var(--bone)}
+.actions{display:flex;flex-wrap:wrap;gap:.9rem 1.6rem;align-items:center}
+.btn{display:inline-block;font-family:var(--text);font-weight:700;font-size:1.0625rem;text-decoration:none;padding:.85rem 1.5rem;background:var(--gold);color:var(--black);border:2px solid var(--gold)}
+.btn:hover{background:#f6c462;border-color:#f6c462}
+.quiet{font-weight:500;text-underline-offset:.25em}
+
+/* Film */
+.film{padding:clamp(3.5rem,9vw,7rem) 0}
+.film .wrap{display:grid;grid-template-columns:minmax(0,22rem) minmax(0,1fr);gap:clamp(2rem,6vw,5rem);align-items:center}
+.screen{border:3px solid var(--black);outline:1px solid rgba(236,228,210,.28);background:#000}
+.screen video{width:100%;aspect-ratio:9/16;object-fit:cover}
+.opening{font-family:var(--saga);font-style:italic;font-size:clamp(1.5rem,2.9vw,2.3rem);line-height:1.28;max-width:19em;margin:0}
+.opening + p{margin-top:1.5rem;color:var(--mist);font-weight:500}
+
+/* Kapitel: Bild als Comic-Panel mit Erzählkasten */
+.chapter{padding:clamp(3rem,8vw,6.5rem) 0;border-top:1px solid rgba(236,228,210,.12)}
+.chapter .wrap{display:grid;grid-template-columns:minmax(0,19rem) minmax(0,1fr);gap:clamp(2rem,6vw,5rem);align-items:start}
+.chapter.flip .wrap{grid-template-columns:minmax(0,1fr) minmax(0,19rem)}
+.chapter.flip .panel{order:2}
+.panel{margin:0;border:3px solid var(--black);outline:1px solid rgba(236,228,210,.28);background:var(--black)}
+.panel img{width:100%;aspect-ratio:9/16;object-fit:cover}
+.panel figcaption{font-family:var(--saga);font-style:italic;font-size:1.0625rem;line-height:1.35;background:var(--bone);color:var(--black);padding:.7rem .9rem;border-top:3px solid var(--black)}
+.copy{padding-top:clamp(0rem,3vw,2.5rem)}
+
+/* Drei Dämonen */
+.demons{padding:clamp(3rem,8vw,6.5rem) 0;background:var(--stone);border-top:1px solid rgba(236,228,210,.12)}
+.demons header{margin-bottom:clamp(2rem,5vw,3.5rem)}
+.triptych{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(1.2rem,3vw,2.2rem)}
+.triptych .panel img{aspect-ratio:3/4}
+.triptych h3{margin:1.3rem 0 .2rem}
+.law{font-weight:700;color:var(--gold);margin:0 0 .6rem;font-size:1.0625rem}
+.triptych p{font-size:1.125rem}
+
+/* Zwei Ritter */
+.knights{padding:clamp(3rem,8vw,6.5rem) 0;border-top:1px solid rgba(236,228,210,.12)}
+.knights header{margin-bottom:clamp(2rem,5vw,3.5rem)}
+.pair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(1.5rem,5vw,4rem)}
+.pair article{display:grid;grid-template-columns:minmax(0,11rem) minmax(0,1fr);gap:1.5rem;align-items:start}
+.pair .panel img{aspect-ratio:3/4}
+.who{font-weight:700;color:var(--gold);margin:.2rem 0 .7rem;font-size:1.0625rem}
+
+/* Das Vorhaben */
+.quest{padding:clamp(3rem,8vw,6.5rem) 0 clamp(4rem,10vw,8rem);background:var(--stone);border-top:1px solid rgba(236,228,210,.12)}
+.quest ol{list-style:none;counter-reset:step;margin:clamp(2rem,5vw,3.5rem) 0 0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(1.2rem,3vw,2.5rem)}
+.quest li{counter-increment:step;border-top:2px solid var(--gold);padding-top:1rem}
+.quest li::before{content:counter(step);font-family:var(--saga);font-size:3.2rem;line-height:1;color:var(--gold);display:block;margin-bottom:.5rem}
+.quest li h3{font-size:1.5rem;margin-bottom:.5rem}
+.quest li p{font-size:1.125rem;margin:0}
+
+/* Das Licht: die Seite wird hell */
+.dawn{background:linear-gradient(180deg,var(--stone) 0,#5b4a2c 14%,var(--gold) 30%,#f9e2a6 44%,var(--dawn) 60%,#fff 100%);color:var(--black);padding:clamp(14rem,34vw,24rem) 0 0}
+.dawn .wrap.cta{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,17rem);gap:clamp(2rem,6vw,5rem);align-items:end;padding-bottom:clamp(3.5rem,8vw,6rem)}
+.dawn h2{font-size:clamp(2.4rem,6.2vw,4.8rem);line-height:1}
+.dawn p{font-size:1.25rem;margin-top:1.4rem}
+.dawn .btn{background:var(--black);color:#fff;border-color:var(--black);margin-top:.6rem}
+.dawn .btn:hover{background:#2a2f38;border-color:#2a2f38}
+.dawn .panel{outline-color:rgba(7,9,13,.25)}
+.dawn .panel figcaption{background:#fff}
+.address{font-family:var(--saga);font-size:1.25rem;margin-top:1.6rem}
+footer{border-top:1px solid rgba(7,9,13,.18);padding:1.6rem 0 2.4rem;font-size:1rem;color:#3b3f47}
+footer .wrap{display:flex;flex-wrap:wrap;gap:.5rem 2rem;justify-content:space-between}
+footer p{margin:0;max-width:none}
+footer a{text-underline-offset:.2em}
+footer nav{display:flex;flex-wrap:wrap;gap:.4rem 1.4rem}
+
+@media (max-width:56rem){
+  .film .wrap,.chapter .wrap,.chapter.flip .wrap,.dawn .wrap.cta{grid-template-columns:minmax(0,1fr)}
+  .chapter.flip .panel{order:0}
+  .film .screen,.chapter .panel,.dawn .panel{max-width:20rem}
+  .triptych{grid-template-columns:minmax(0,1fr);gap:3rem}
+  .triptych .panel{max-width:20rem}
+  .pair{grid-template-columns:minmax(0,1fr)}
+  .quest ol{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:32rem){
+  body{font-size:1.125rem}
+  .pair article{grid-template-columns:minmax(0,1fr)}
+  .pair .panel{max-width:14rem}
+  .quest ol{grid-template-columns:minmax(0,1fr)}
+}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <p class="makers">Eine Sage von WMC und Logicc</p>
+    <h1 lang="en">The Knights of the Morning Sun</h1>
+    <p>Generative KI steht vor den Toren der Krankenhäuser. Manche halten sie verriegelt. Diese Geschichte erzählt, was dann passiert, und was wir dagegen tun.</p>
+    <div class="actions">
+      <a class="btn" href="#film">Film ansehen</a>
+      <a class="quiet" href="#sage">Die Geschichte lesen</a>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<section class="film" id="film" aria-label="Der Film">
+  <div class="wrap">
+    <div class="screen">
+      <video controls playsinline preload="metadata" poster="assets/poster.jpg" src="assets/film.mp4"></video>
+    </div>
+    <div>
+      <p class="opening" lang="en">“After long years of hardship, when the healers were few and the nights were endless, a new magic arrived in the villages: the spell of generative AI.”</p>
+      <p>90 Sekunden, auf Englisch erzählt. Am besten mit Ton.</p>
+    </div>
+  </div>
+</section>
+
+<section class="chapter" id="sage">
+  <div class="wrap">
+    <figure class="panel">
+      <img src="assets/spell.jpg" alt="Eine Feder schreibt von selbst auf Pergament, goldene Zeichen steigen auf." loading="lazy" width="810" height="1440">
+      <figcaption lang="en">It wrote. It answered. It never slept.</figcaption>
+    </figure>
+    <div class="copy">
+      <h2 lang="en">A new magic arrived in the villages</h2>
+      <p class="de">Was im Krankenhaus gerade passiert</p>
+      <p>Generative KI ist nicht über die IT-Abteilung ins Haus gekommen. Sie kam über das eigene Handy. Ärztinnen, Pflegekräfte und Verwaltung nutzen sie längst privat, weil sie Texte schreibt, Fragen beantwortet und nie müde wird.</p>
+      <p>Manche Häuser haben darauf mit einem Verbot reagiert. Die Tore sind zu. Das Problem ist damit nicht draußen.</p>
+    </div>
+  </div>
+</section>
+
+<section class="chapter flip">
+  <div class="wrap">
+    <figure class="panel">
+      <img src="assets/gnomes.jpg" alt="Kleine Schattengestalten mit glimmenden Augen huschen durch einen Fackelgang der Festung." loading="lazy" width="810" height="1440">
+      <figcaption lang="en">But no wall holds back a spell.</figcaption>
+    </figure>
+    <div class="copy">
+      <h2 lang="en">The gnomes of shadow AI</h2>
+      <p class="de">Schatten-KI: genutzt wird trotzdem, nur unsichtbar</p>
+      <p>Ein Verbot beendet die Nutzung nicht. Es macht sie unsichtbar. Der Arztbrief wird im privaten Konto geglättet, die Frage zum Dienstplan im kostenlosen Chatbot gestellt.</p>
+      <p>Das sind die Gnome: klein, flink, überall und in keiner Liste verzeichnet. Niemand im Haus weiß, welche Daten dabei wohin gehen.</p>
+    </div>
+  </div>
+</section>
+
+<section class="demons">
+  <div class="wrap">
+    <header>
+      <h2 lang="en">Three demons no lord knew how to face</h2>
+      <p class="de">Wo die Gnome sind, wachsen drei größere Probleme heran</p>
+    </header>
+    <div class="triptych">
+      <article>
+        <figure class="panel">
+          <img src="assets/demon-203.jpg" alt="Eine Kapuzengestalt in schweren Ketten hält eine versiegelte Schriftrolle." loading="lazy" width="810" height="1440">
+          <figcaption lang="en">Keeper of secrets</figcaption>
+        </figure>
+        <h3 lang="en">The Demon of Two-Oh-Three</h3>
+        <p class="law">§ 203 StGB und Datenschutz</p>
+        <p>Wer Patientengeheimnisse unbefugt offenbart, macht sich strafbar. Landen Patientendaten in einem KI-Dienst, den das Haus weder geprüft noch vertraglich gebunden hat, steht genau diese Frage im Raum.</p>
+      </article>
+      <article>
+        <figure class="panel">
+          <img src="assets/demon-untamed.jpg" alt="Eine gesichtslose Riesengestalt im zerrissenen Mantel, aus der dunkler Rauch aufsteigt." loading="lazy" width="810" height="1440">
+          <figcaption lang="en">Who serves no master</figcaption>
+        </figure>
+        <h3 lang="en">The Untamed One</h3>
+        <p class="law">KI ohne Auftrag</p>
+        <p>Die Werkzeuge sind da, aber niemand hat festgelegt, wofür. Ohne Anwendungsfälle, ohne Übung und ohne Messung bleibt KI ein Spielzeug für wenige. Sie kostet Geld und dient niemandem.</p>
+      </article>
+      <article>
+        <figure class="panel">
+          <img src="assets/demon-act.jpg" alt="Ein Riese aus unzähligen Pergamentrollen, dessen Schriftbänder sich um die Türme der Festung legen." loading="lazy" width="810" height="1440">
+          <figcaption lang="en">With its thousand rules</figcaption>
+        </figure>
+        <h3 lang="en">The Demon of the Act</h3>
+        <p class="law">EU-KI-Verordnung (AI Act)</p>
+        <p>Die Verordnung knüpft Pflichten an das Risiko einer KI-Anwendung und verlangt, dass die Menschen, die mit KI arbeiten, dafür kompetent sind. Wer seine Gnome nicht kennt, kann nichts davon nachweisen.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="knights">
+  <div class="wrap">
+    <header>
+      <h2 lang="en">Two knights in the east</h2>
+      <p class="de">Wer hier gemeinsam reitet</p>
+    </header>
+    <div class="pair">
+      <article>
+        <figure class="panel">
+          <img src="assets/logicon.jpg" alt="Ein Ritter mit blau leuchtenden Gravuren steht mit dem Hammer am Amboss, hinter ihm ein Banner." loading="lazy" width="810" height="1440">
+        </figure>
+        <div>
+          <h3 lang="en">Logicon, the Master of Tech</h3>
+          <p class="who">Logicc</p>
+          <p>Logicon schmiedet das Tor, durch das kein Gnom kommt: einen sicheren Zugang zu KI für das ganze Haus. Wer einen guten offiziellen Weg hat, braucht keinen heimlichen.</p>
+        </div>
+      </article>
+      <article>
+        <figure class="panel">
+          <img src="assets/vmcilas.jpg" alt="Ein Ritter mit goldbesetzter Rüstung hebt die Hand, vor ihm beugt sich eine Riesengestalt an einer leuchtenden Kette." loading="lazy" width="810" height="1440">
+        </figure>
+        <div>
+          <h3 lang="en">VMCilas, the Master of Performance</h3>
+          <p class="who">WMC</p>
+          <p>VMCilas zähmt die Dämonen. Wir klären mit dem Haus die Regeln, wählen die Anwendungsfälle aus, die im Klinikalltag wirklich entlasten, und machen die Teams sicher im Umgang. Die KI soll dem Haus dienen.</p>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="quest">
+  <div class="wrap">
+    <h2 lang="en">The quest</h2>
+    <p class="de">Was wir gemeinsam mit Ihrem Haus tun, in vier Schritten</p>
+    <ol>
+      <li>
+        <h3>Die Gnome zählen</h3>
+        <p>Wir machen sichtbar, wo im Haus heute schon KI genutzt wird und mit welchen Daten.</p>
+      </li>
+      <li>
+        <h3>Das Tor schmieden</h3>
+        <p>Logicc stellt den sicheren Zugang bereit. Ein offizieller Weg für alle ersetzt viele heimliche.</p>
+      </li>
+      <li>
+        <h3>Die Dämonen zähmen</h3>
+        <p>Schweigepflicht, Datenschutz, KI-Verordnung: Wir legen fest, was erlaubt ist und wer es verantwortet, und schulen die Teams.</p>
+      </li>
+      <li>
+        <h3>Das Licht hereinlassen</h3>
+        <p>Wir bringen die ersten Anwendungsfälle in den Alltag und messen, was sie bringen.</p>
+      </li>
+    </ol>
+  </div>
+</section>
+
+</main>
+
+<div class="dawn">
+  <section class="wrap cta" aria-label="Kontakt">
+    <div>
+      <h2 lang="en">And then, one day, they rode out to bring the light.</h2>
+      <p>Wenn bei Ihnen die Tore noch verriegelt sind oder die Gnome schon durch die Gänge huschen, sprechen Sie mit uns.</p>
+      <a class="btn" href="mailto:kontakt@wmc-healthcare.de?subject=The%20Knights%20of%20the%20Morning%20Sun">E-Mail an WMC schreiben</a>
+      <p class="address">kontakt@wmc-healthcare.de</p>
+    </div>
+    <figure class="panel">
+      <img src="assets/light.jpg" alt="Zwei Reiter vor der Festung, aus dem geöffneten Tor strömt goldenes Licht." loading="lazy" width="810" height="1440">
+      <figcaption lang="en">…to bring the light.</figcaption>
+    </figure>
+  </section>
+  <footer>
+    <div class="wrap">
+      <p>Ein gemeinsames Vorhaben von <a href="https://www.wmc-healthcare.de/">WMC Healthcare</a> und <a href="https://www.logicc.com/">Logicc</a>. Film und Bilder wurden mit KI erzeugt.</p>
+      <nav aria-label="Rechtliches">
+        <a href="https://www.wmc-healthcare.de/impressum/">Impressum</a>
+        <a href="https://www.wmc-healthcare.de/datenschutzerklaerung/">Datenschutzerklärung</a>
+      </nav>
+    </div>
+  </footer>
+</div>
+
+</body>
+</html>
