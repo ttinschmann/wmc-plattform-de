@@ -65,6 +65,7 @@ h1{font-size:clamp(3rem,10.5vw,8.25rem);line-height:.92;letter-spacing:-.015em;m
 
 /* Erklärfilme: gleiche Bühne wie der Hauptfilm, Text als Kapitel */
 .episode{border-top:1px solid rgba(236,228,210,.12)}
+.chapter .more{margin-top:1.8rem}
 .episode .eyebrow{font-weight:700;color:var(--gold);font-size:1.0625rem;margin:0 0 .6rem}
 .episode .note{color:var(--mist);font-weight:500;font-size:1.0625rem;margin-top:1.4rem}
 
@@ -147,7 +148,7 @@ footer nav{display:flex;flex-wrap:wrap;gap:.4rem 1.4rem}
     <div class="actions">
       <a class="btn" href="#film">Film ansehen</a>
       <a class="quiet" href="#sage">Die Geschichte lesen</a>
-      <a class="quiet" href="#schatten-ki">Folge 1: Schatten-KI</a>
+      <a class="quiet" href="#schatten-ki" data-play="schatten-ki">Folge 1: Schatten-KI</a>
     </div>
   </div>
 </header>
@@ -192,6 +193,7 @@ footer nav{display:flex;flex-wrap:wrap;gap:.4rem 1.4rem}
       <p class="de">Schatten-KI: genutzt wird trotzdem, nur unsichtbar</p>
       <p>Ein Verbot beendet die Nutzung nicht. Es macht sie unsichtbar. Der Arztbrief wird im privaten Konto geglättet, die Frage zum Dienstplan im kostenlosen Chatbot gestellt.</p>
       <p>Das sind die Gnome: klein, flink, überall und in keiner Liste verzeichnet. Niemand im Haus weiß, welche Daten dabei wohin gehen.</p>
+      <p class="more"><a class="btn" href="#schatten-ki" data-play="schatten-ki">▶ Erklärfilm ansehen (2:38)</a></p>
     </div>
   </div>
 </section>
@@ -332,5 +334,14 @@ footer nav{display:flex;flex-wrap:wrap;gap:.4rem 1.4rem}
   </footer>
 </div>
 
+<script>
+/* Klick auf einen Erklärfilm-Link: zum Player springen und den Film starten */
+document.querySelectorAll('a[data-play]').forEach(function(a){
+  a.addEventListener('click',function(){
+    var v=document.querySelector('#'+a.dataset.play+' video');
+    if(v){var p=v.play(); if(p&&p.catch){p.catch(function(){});}}
+  });
+});
+</script>
 </body>
 </html>
