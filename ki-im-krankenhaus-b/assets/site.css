@@ -217,6 +217,8 @@ input[type=range]::-moz-range-thumb{width:26px;height:26px;border-radius:50%;bac
 .zeich .zl{font:500 10.5px var(--mono);letter-spacing:.05em;fill:var(--ink2)}
 .zeich .zl.k{fill:var(--ink);font-weight:500;font-size:11px}
 .zeich figcaption{margin-top:14px}
+.zeich.pk{margin-top:clamp(40px,6vw,72px)}
+.zeich .pkt{font:500 12.5px var(--sans);fill:var(--ink)}
 .map.fein{padding:clamp(10px,2vw,22px)}
 .map.fein .zl{font-size:11px}
 .map.fein .zl.k{font-size:11.5px}
@@ -291,8 +293,8 @@ main > section{scroll-snap-align:start;scroll-margin-top:var(--kopf,73px)}
 @media (prefers-reduced-motion:reduce){.rv{opacity:1;transition:none}}
 @media (max-width:900px){
   .fx,.fx.weit{grid-template-columns:minmax(0,1fr)}
-  .map.fein{overflow-x:auto}
-  .map.fein svg{min-width:860px}
+  .map.fein,.zeich.pk{overflow-x:auto}
+  .map.fein svg,.zeich.pk svg{min-width:860px}
   .fx > *{min-width:0}
   .fx-side{top:var(--kopf,96px);z-index:3;background:#fff;margin:0 calc(var(--pad)*-1);padding:12px var(--pad) 6px;border-bottom:1px solid var(--line)}
   .fx-side h2{font-size:20px;line-height:1.2;margin-bottom:10px}
