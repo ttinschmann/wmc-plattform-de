@@ -217,6 +217,12 @@ input[type=range]::-moz-range-thumb{width:26px;height:26px;border-radius:50%;bac
 .zeich .zl{font:500 10.5px var(--mono);letter-spacing:.05em;fill:var(--ink2)}
 .zeich .zl.k{fill:var(--ink);font-weight:500;font-size:11px}
 .zeich figcaption{margin-top:14px}
+.map.fein{padding:clamp(10px,2vw,22px)}
+.map.fein .zl{font-size:10px}
+.map.fein .zl.k{font-size:10.5px}
+.map.fein text{paint-order:stroke;stroke:#fff;stroke-width:3.5px;stroke-linejoin:round}
+.map.fein{overflow-x:auto}
+.map.fein svg{min-width:860px}
 .pil.mz{grid-template-columns:6fr 5fr;align-items:start}
 .pil.mz .zeich{margin-top:28px}
 .fx{display:grid;grid-template-columns:minmax(220px,3fr) 8fr;gap:clamp(28px,6vw,96px);margin-top:clamp(32px,5vw,64px);align-items:start}
