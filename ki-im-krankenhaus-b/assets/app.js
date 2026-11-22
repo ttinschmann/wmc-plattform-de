@@ -15,11 +15,12 @@
 /* v10: Menü links folgt dem Scrollen, Text blendet ein, Zahlen zählen hoch */
 (function(){
   var kopf=document.querySelector(".head");function hk(){if(kopf)document.documentElement.style.setProperty("--kopf",kopf.offsetHeight+"px");}hk();addEventListener("resize",hk);
-  var links=[].slice.call(document.querySelectorAll(".fx-nav a")),items=[].slice.call(document.querySelectorAll(".fx-item"));
-  if(links.length&&"IntersectionObserver" in window){
+  if("IntersectionObserver" in window){[].slice.call(document.querySelectorAll(".fx")).forEach(function(fx){
+    var links=[].slice.call(fx.querySelectorAll(".fx-nav a")),items=[].slice.call(fx.querySelectorAll(".fx-item"));
+    if(!links.length)return;
     var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){links.forEach(function(a){var an=a.getAttribute("href")==="#"+e.target.id;a.setAttribute("aria-current",an?"true":"false");if(an){var ol=a.parentNode.parentNode;if(ol.scrollWidth>ol.clientWidth)ol.scrollLeft=a.parentNode.offsetLeft-ol.offsetLeft-12;}});}});},{rootMargin:"-30% 0px -60% 0px"});
     items.forEach(function(i){io.observe(i);});links[0].setAttribute("aria-current","true");
-  }
+  });}
   var ruhig=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   if(!("IntersectionObserver" in window)||ruhig)return;
   var rv=[].slice.call(document.querySelectorAll("main .sec h2, main .sec .lead, main .pil .body, .fx-item, .zeich, .ft > div, .way li, .alt tbody tr, .map"));
