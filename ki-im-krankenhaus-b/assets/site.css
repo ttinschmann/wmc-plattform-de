@@ -225,15 +225,18 @@ input[type=range]::-moz-range-thumb{width:26px;height:26px;border-radius:50%;bac
 .map.fein svg{min-width:860px}
 .pil.mz{grid-template-columns:6fr 5fr;align-items:start}
 .pil.mz .zeich{margin-top:28px}
-.fx{display:grid;grid-template-columns:minmax(220px,3fr) 8fr;gap:clamp(28px,6vw,96px);margin-top:clamp(32px,5vw,64px);align-items:start}
-.fx-nav{position:sticky;top:104px}
+.fx{display:grid;grid-template-columns:minmax(240px,4fr) 7fr;gap:clamp(28px,6vw,96px);align-items:start}
+/* Überschrift und Menü bleiben gemeinsam stehen, bis der Abschnitt zu Ende ist */
+.fx-side{position:sticky;top:104px}
+.fx-side h2{font-size:clamp(27px,2.7vw,38px);margin-bottom:clamp(20px,2.4vw,32px)}
+.fx-lead{margin-bottom:clamp(36px,5vw,64px)}
 .fx-nav ol{list-style:none;margin:0;padding:0}
 .fx-nav a{display:flex;justify-content:space-between;gap:12px;padding:14px 0;border-bottom:1px solid var(--line);color:var(--ink2);text-decoration:none;font-size:16.5px;line-height:1.3;transition:color .2s,border-color .2s}
 .fx-nav a sup{font:500 11px var(--mono);color:var(--ink2);top:0}
 .fx-nav a:hover{color:var(--ink)}
 .fx-nav a[aria-current="true"]{color:var(--ink);border-bottom-color:var(--ink);font-weight:600}
 .fx-nav a[aria-current="true"] span::after{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--wmc);margin-left:10px;vertical-align:middle}
-.fx-item{padding-bottom:clamp(48px,7vw,88px);scroll-margin-top:96px}
+.fx-item{padding-bottom:clamp(48px,7vw,88px);scroll-margin-top:108px}
 .fx-item .lead{margin-top:10px;max-width:34em}
 .tt{width:100%;border-collapse:collapse;margin-top:26px;font-size:16.5px;line-height:1.45}
 .tt th,.tt td{text-align:left;vertical-align:top;padding:14px 20px 14px 0;border-top:1px solid var(--line)}
@@ -274,7 +277,9 @@ input[type=range]::-moz-range-thumb{width:26px;height:26px;border-radius:50%;bac
 @media (max-width:900px){
   .fx{grid-template-columns:minmax(0,1fr)}
   .fx > *{min-width:0}
-  .fx-nav{position:static}
+  .fx-side{top:var(--kopf,96px);z-index:3;background:#fff;margin:0 calc(var(--pad)*-1);padding:12px var(--pad) 6px;border-bottom:1px solid var(--line)}
+  .fx-side h2{font-size:20px;line-height:1.2;margin-bottom:10px}
+  .fx-item{scroll-margin-top:calc(var(--kopf,96px) + 118px)}
   .fx-nav ol{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px}
   .fx-nav a{white-space:nowrap;border:1px solid var(--line);border-radius:999px;padding:8px 14px;font-size:14.5px}
   .fx-nav a sup{display:none}

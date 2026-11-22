@@ -14,9 +14,10 @@
 
 /* v10: Menü links folgt dem Scrollen, Text blendet ein, Zahlen zählen hoch */
 (function(){
+  var kopf=document.querySelector(".head");function hk(){if(kopf)document.documentElement.style.setProperty("--kopf",kopf.offsetHeight+"px");}hk();addEventListener("resize",hk);
   var links=[].slice.call(document.querySelectorAll(".fx-nav a")),items=[].slice.call(document.querySelectorAll(".fx-item"));
   if(links.length&&"IntersectionObserver" in window){
-    var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){links.forEach(function(a){a.setAttribute("aria-current",a.getAttribute("href")==="#"+e.target.id?"true":"false");});}});},{rootMargin:"-30% 0px -60% 0px"});
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){links.forEach(function(a){var an=a.getAttribute("href")==="#"+e.target.id;a.setAttribute("aria-current",an?"true":"false");if(an){var ol=a.parentNode.parentNode;if(ol.scrollWidth>ol.clientWidth)ol.scrollLeft=a.parentNode.offsetLeft-ol.offsetLeft-12;}});}});},{rootMargin:"-30% 0px -60% 0px"});
     items.forEach(function(i){io.observe(i);});links[0].setAttribute("aria-current","true");
   }
   var ruhig=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
