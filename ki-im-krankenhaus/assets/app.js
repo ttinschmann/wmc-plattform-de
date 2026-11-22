@@ -5,6 +5,9 @@
   function f(){var n=+b.value,h=Math.round(n*2.2*0.5*0.5*21/100)*100;o.textContent=h.toLocaleString("de-DE");v.textContent=n.toLocaleString("de-DE");}
   b.addEventListener("input",f);f();
 })();
-/* Film: Wenn er nicht lädt, bleibt der Hinweistext stehen */
-(function(){var f=document.querySelector("video[data-film]");if(!f)return;function off(){var s=f.closest(".film");if(s)s.classList.add("off");}
-  f.addEventListener("error",off);setTimeout(function(){if(f.readyState===0)off();},4000);})();
+/* Film: Bereich ausblenden, solange der Film nicht da ist; sobald er spielbar ist, wieder zeigen */
+(function(){var f=document.querySelector("video[data-film]");if(!f)return;var s=f.closest(".film");
+  function off(){if(s)s.classList.add("off");}
+  function on(){if(s)s.classList.remove("off");f.removeAttribute("data-off");}
+  f.addEventListener("error",off);f.addEventListener("loadeddata",on);f.addEventListener("canplay",on);
+  if(f.readyState>=2)on();else setTimeout(function(){if(f.readyState<2)off();},6000);})();
