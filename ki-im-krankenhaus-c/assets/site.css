@@ -347,3 +347,34 @@ main > section{scroll-margin-top:var(--kopf,73px)}
 .btn:hover{background:var(--wmc-d)}
 .talk .btn{background:var(--wmc);color:#fff}
 .talk .btn:hover{background:#fff;color:var(--ink)}
+
+/* Überschriften wie bei WMC: fett und leicht gesperrt (dort 700, 1 px Abstand) */
+h1,h2,h3{font-weight:700;letter-spacing:.012em}
+h2{font-size:clamp(26px,3.1vw,42px);line-height:1.14}
+.st > h2,.fx-side h2,.fx.weit .fx-side h2{font-size:clamp(23px,2.1vw,30px);line-height:1.2}
+.facts b{font-weight:700;letter-spacing:0}
+
+/* Knöpfe wie bei WMC: fast eckig, fett; gefüllt in Orange, daneben umrandet in Braun */
+.btn{border-radius:3px;font-weight:700}
+.btn.o{background:transparent;color:var(--ink);box-shadow:inset 0 0 0 1.6px var(--ink)}
+.btn.o:hover{background:var(--ink);color:#fff}
+
+/* Einstieg wie bei WMC: Foto über die ganze Breite, davor eine schräg angeschnittene helle Fläche mit der Überschrift */
+.hero.hc{position:relative;padding:0;background:var(--wmc-t);overflow:hidden}
+.hc-bild{position:absolute;inset:0;background:url("https://www.wmc-healthcare.de/wp-content/uploads/2022/01/effiziente-beratung-healthcare.jpg") right center/cover no-repeat}
+.hc-flaeche{position:absolute;inset:0;background:rgba(255,255,255,.93);clip-path:polygon(0 0,62% 0,52% 100%,0 100%)}
+.hc-in{position:relative;display:flex;flex-direction:column;justify-content:center;min-height:min(72vh,620px);padding-top:clamp(56px,7vw,96px);padding-bottom:clamp(56px,7vw,96px)}
+.hc-in > *{max-width:calc(52vw - max(0px,(100vw - var(--w))/2) - var(--pad) - 40px)}
+.hero.hc h1{font-size:clamp(30px,3.2vw,44px);line-height:1.14}
+.hero.hc .lead{margin-top:22px;color:var(--ink)}
+.hc-kn{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px}
+.hc-fakten{padding:18px 0 clamp(36px,5vw,64px)}
+.hc-fakten .facts{margin-top:0;border-top:0}
+@media(max-width:900px){
+  .hero.hc{background:#fff}
+  .hc-flaeche{display:none}
+  .hc-bild{position:static;height:210px;background-size:190% auto;background-position:right center}
+  .hc-in{min-height:0;padding-top:30px;padding-bottom:34px}
+  .hc-in > *{max-width:none}
+  .hc-kn .btn{flex:1 1 100%;justify-content:center}
+}
