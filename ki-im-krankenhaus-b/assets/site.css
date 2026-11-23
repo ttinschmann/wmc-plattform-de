@@ -253,7 +253,7 @@ main > section{scroll-margin-top:var(--kopf,73px)}
 .fx{display:grid;grid-template-columns:minmax(240px,4fr) 7fr;gap:clamp(28px,6vw,96px);align-items:start}
 /* Überschrift und Menü bleiben gemeinsam stehen, bis der Abschnitt zu Ende ist */
 .fx-side{position:sticky;top:104px}
-.fx-side h2{font-size:clamp(27px,2.7vw,38px);margin-bottom:clamp(20px,2.4vw,32px)}
+.fx-side h2{font-size:clamp(25px,2.4vw,33px);line-height:1.15;margin-bottom:clamp(20px,2.4vw,32px)}
 .fx-lead{margin-bottom:clamp(36px,5vw,64px)}
 .fx-grp{font:500 11.5px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--ink2);padding:18px 0 6px}
 .fx-grp:first-child{padding-top:0}
