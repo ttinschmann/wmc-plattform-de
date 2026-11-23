@@ -241,6 +241,9 @@ main > section{scroll-margin-top:var(--kopf,73px)}
 .pil > :first-child,.st > :first-child,.fall > :first-child{position:sticky;top:104px}
 .fx .pil > :first-child{position:static}
 .pil .body .zeich{margin:28px 0 30px}
+.film > .wrap::after{content:"";display:block;height:45vh}
+.film .pin{position:sticky;top:calc(var(--kopf,73px) + 20px)}
+.film .stage{max-height:calc(100vh - var(--kopf,73px) - 110px)}
 .eng{max-width:560px;margin-top:20px}
 .pil.mz{grid-template-columns:6fr 5fr;align-items:start}
 .pil.mz .zeich{margin-top:28px}
