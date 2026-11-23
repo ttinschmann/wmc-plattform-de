@@ -226,7 +226,10 @@ input[type=range]::-moz-range-thumb{width:26px;height:26px;border-radius:50%;bac
 .map.fein .zl.k{font-size:11.5px}
 .map.fein text{paint-order:stroke;stroke:#fff;stroke-width:3.5px;stroke-linejoin:round}
 .fx.weit{grid-template-columns:minmax(230px,3fr) 9fr;gap:clamp(28px,5vw,72px)}
-.fx.weit .fx-item > .lead{max-width:34em}
+.fx.weit .fx-item > .lead,.fx.weit .fx-item > .pin > .lead{max-width:34em}
+.fx-item.hx > .pin{position:sticky}
+.fx-item.hx::after{content:"";display:block;height:30vh}
+.fx-body > .fx-item:last-child{padding-bottom:0}
 .fx .map{margin-top:28px;border:0;border-radius:0;padding:0}
 .fx.weit .fx-side h2{font-size:clamp(25px,2.4vw,33px)}
 /* Anhalten an jeder Überschrift: Die Seite rastet beim Scrollen sanft am Beginn jedes Abschnitts ein */

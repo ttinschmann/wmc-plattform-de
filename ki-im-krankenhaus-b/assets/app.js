@@ -15,6 +15,14 @@
 /* v10: Menü links folgt dem Scrollen, Text blendet ein, Zahlen zählen hoch */
 (function(){
   var kopf=document.querySelector(".head");function hk(){if(kopf)document.documentElement.style.setProperty("--kopf",kopf.offsetHeight+"px");}hk();addEventListener("resize",hk);
+  /* Jeder Unterblock bleibt beim Scrollen kurz stehen; auf dem Telefon nur, wenn er ganz in den Bildschirm passt */
+  function halt(){var mob=window.matchMedia&&window.matchMedia("(max-width:900px)").matches,k=kopf?kopf.offsetHeight:73;
+    [].slice.call(document.querySelectorAll(".fx")).forEach(function(fx){var side=fx.querySelector(".fx-side"),o1=mob?k+(side?side.offsetHeight:0)+10:104,o2=mob?o1:k+12;
+      [].slice.call(fx.querySelectorAll(".fx-item")).forEach(function(it){var p=it.firstElementChild;
+        if(!p||!p.classList.contains("pin")){p=document.createElement("div");p.className="pin";while(it.firstChild)p.appendChild(it.firstChild);it.appendChild(p);}
+        var H=p.offsetHeight,top=H<=innerHeight-o1-16?o1:(mob&&H>innerHeight-o2-8?-1:o2);
+        it.classList.toggle("hx",top>=0);p.style.top=top>=0?top+"px":"";});});}
+  halt();addEventListener("resize",halt);addEventListener("load",halt);if(document.fonts&&document.fonts.ready)document.fonts.ready.then(halt);
   if("IntersectionObserver" in window){[].slice.call(document.querySelectorAll(".fx")).forEach(function(fx){
     var links=[].slice.call(fx.querySelectorAll(".fx-nav a")),items=[].slice.call(fx.querySelectorAll(".fx-item"));
     if(!links.length)return;
